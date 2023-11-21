@@ -29,55 +29,14 @@
                 </div>
             </div>
         </nav>
-        <div class="blog_container">
+        <div class="blog_container" th:each="post : ${posts}">
             <div class="blog">
-                <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
-            </div>
-
-            <div class="blog">
-                 <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
-            </div>
-
-            <div class="blog">
-                 <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
-            </div>
-
-            <div class="blog">
-                 <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
-            </div>
-
-            <div class="blog">
-                 <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
-            </div>
-
-            <div class="blog">
-                 <h4 id="blog_title">Cricket: Dominace of BCCI</h4>
-                <small id="blog_author_descp">
-                    Vishal Das, 18/06/2023
-                </small>
-                <p id="excerpt">Lorem ipsum dolor sit amet consectetur adipisicing elit. At nesciunt eaque cupiditate esse cum id illum a doloribus sapiente adipisci quod nam, neque delectus autem saepe distinctio temporibus mollitia soluta assumenda, pariatur ex quia voluptate. Ipsam quisquam atque fuga hic?</p>
+                <h4 class="blog_title" th:text="${post.title}"></h4>
+                <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
+                <p class="excerpt" th:text="${post.excerpt}"></p>
             </div>
         </div>
+
         <footer class="footer">
             <div id="prev">< &nbsp; Previous</div>
             <div id="next">Next &nbsp; ></div>

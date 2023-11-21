@@ -55,7 +55,7 @@ left:10px;
 .blog_container{
    
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns:auto auto auto ;
     gap:2vw;
     padding: 1.5rem;
    min-height: 70vh;
