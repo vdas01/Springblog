@@ -7,40 +7,46 @@
     <link rel="stylesheet" href="css/Home.css">
 </head>
 <body>
-   <div class="container">
-        <nav id="navbar">
-            <h1>My Blog Application</h1>
-            <div class="right">
-                <div class="upper">
-                    <div class="search_box">
-                        <i class="fa-solid fa-magnifying-glass search_icon"></i>
-                        <input type="text" name="search" id="search_bar" placeholder="Search...">
-                    </div>
-                    <div class="user_box">
-                        vdas53073@gmail.com
-                    </div>
-                    <div class="login_box">
-                        Login
-                    </div>
+<div class="container">
+    <nav id="navbar">
+        <h1>My Blog Application</h1>
+        <div class="middle">
+            <a th:href="@{/newpost}" >Create Post</a>
+        </div>
+        <div class="right">
+            <div class="upper">
+                <div class="search_box">
+                    <i class="fa-solid fa-magnifying-glass search_icon"></i>
+                    <input type="text" name="search" id="search_bar" placeholder="Search...">
                 </div>
-                <div class="lower">
-                        <div class="filter_box">Filter</div>
-                        <div class="sort_box">Sort</div>
+                <div class="user_box">
+                    vdas53073@gmail.com
+                </div>
+                <div class="login_box">
+                    Login
                 </div>
             </div>
-        </nav>
-        <div class="blog_container" th:each="post : ${posts}">
-            <div class="blog">
-                <h4 class="blog_title" th:text="${post.title}"></h4>
-                <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
-                <p class="excerpt" th:text="${post.excerpt}"></p>
+            <div class="lower">
+                <div class="filter_box">Filter</div>
+                <div class="sort_box">Sort</div>
             </div>
         </div>
+    </nav>
+    <div class="blog_container" th:each="post : ${posts}">
+        <div class="blog">
+            <h4 class="blog_title" th:text="${post.title}"></h4>
+            <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
+            <p class="excerpt" th:text="${post.excerpt}"></p>
+            <a th:href="@{/post{postId}(postId=${post.id})}" >Read More</a>
+            <a th:href="@{/editpost{postId}(postId=${post.id})">Edit</a>
+            <a>Delete</a>
+        </div>
+    </div>
 
-        <footer class="footer">
-            <div id="prev">< &nbsp; Previous</div>
-            <div id="next">Next &nbsp; ></div>
-        </footer>
-   </div>
+    <footer class="footer">
+        <div id="prev">< &nbsp; Previous</div>
+        <div id="next">Next &nbsp; ></div>
+    </footer>
+</div>
 </body>
 </html>
