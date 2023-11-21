@@ -8,6 +8,7 @@ import org.springframework.boot.Banner;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,7 +40,7 @@ public class PostService {
         return "Post";
     }
 
-    public String getNewPost(Model model){
+    public String navigateNewPost(Model model){
         Post newPost = new Post();
         Tag newTag = new Tag();
 
@@ -49,7 +50,7 @@ public class PostService {
         return "CreatePost";
     }
 
-    public String postCreation(Post newPost, Tag newTag){
+    public String createPost(Post newPost, Tag newTag){
         Post post = new Post();
         post = newPost;
 
@@ -61,6 +62,52 @@ public class PostService {
 
         postRepository.save(post);
         return "redirect:/";
+    }
+
+    public String navigateEditPost(int postId,Model model){
+        Optional<Post> retrievedPostById = postRepository.findById(postId);
+        if (retrievedPostById.isPresent()){
+            Post oldPost = retrievedPostById.get();
+            List<Tag> oldTags = oldPost.getTags();
+
+            model.addAttribute("tags",oldTags);
+            model.addAttribute("post",oldPost);
+        }
+        else{
+            //error;
+        }
+        return "UpdatePost";
+    }
+
+    public String updatePost(Post updatedPost,Tag updatedTag,Model model){
+        int postId = updatedPost.getId();
+        //search old post by id
+        //oldpost = post
+       //remove old tags of post and add current tag
+        //then merge
+        Optional<Post> optionalPost = postRepository.findById(postId);
+
+        if (optionalPost.isPresent()) {
+
+            Post existingPost = optionalPost.get();
+            existingPost.setTitle(updatedPost.getTitle());
+            existingPost.setContent(updatedPost.getContent());
+            existingPost.setExcerpt(updatedPost.getExcerpt());
+            existingPost.setAuthor(updatedPost.getAuthor());
+            existingPost.clearTags();
+
+            String[] tagsArray = updatedTag.getName().split(",");
+            for(String tempTag: tagsArray){
+                Tag tag = new Tag(tempTag);
+                existingPost.addTags(tag);
+            }
+
+             postRepository.save(existingPost);
+        } else {
+            // Handle the case where the post with the given ID is not found
+//            throw new EntityNotFoundException("Post with ID " + postId + " not found");
+        }
+        return "Home";
     }
 
 

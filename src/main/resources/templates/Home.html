@@ -38,7 +38,7 @@
             <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
             <p class="excerpt" th:text="${post.excerpt}"></p>
             <a th:href="@{/post{postId}(postId=${post.id})}" >Read More</a>
-            <a th:href="@{/editpost{postId}(postId=${post.id})">Edit</a>
+            <a th:href="@{/editpost{postId}(postId=${post.id})}">Edit</a>
             <a>Delete</a>
         </div>
     </div>

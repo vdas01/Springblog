@@ -48,6 +48,10 @@ public class Post {
     @Column(name="updated_at")
     @UpdateTimestamp
     private Date updatedAt;
+
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(name="post_tag",joinColumns = @JoinColumn(name = "post_id"),inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags;
     public Post(){
 
     }
@@ -132,14 +136,22 @@ public class Post {
         this.updatedAt = updatedAt;
     }
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="post_tag",joinColumns = @JoinColumn(name = "post_id"),inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags;
+
 
     //add convience method to add tags
     public void addTags(Tag theTag){
         if(tags == null)
             tags = new ArrayList<>();
         tags.add(theTag);
+    }
+
+    //clear tags
+    public void clearTags(){
+        tags = null;
+    }
+
+    //get tags
+    public List<Tag> getTags(){
+        return tags;
     }
 }

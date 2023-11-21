@@ -31,16 +31,24 @@ public class PostController {
 
     @GetMapping("/newpost")
     public String createNewPost(Model model){
-        return  postService.getNewPost(model);
+        return  postService.navigateNewPost(model);
     }
 
     @PostMapping("/createpost")
-    public String processNewPost(@ModelAttribute("post") Post post,@ModelAttribute("tag")Tag tag){
-        return postService.postCreation(post,tag);
+    public String processNewPost(@ModelAttribute("post") Post newPost,@ModelAttribute("tag")Tag newTag){
+        return postService.createPost(newPost,newTag);
     }
 
+    @GetMapping("/editpost{postId}")
+    public String editPost(@PathVariable Integer postId, Model model){
+        return postService.navigateEditPost(postId,model);
+    }
 
-
+    @GetMapping("/updatepost")
+    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tag")Tag updatedTag,
+                                     Model model){
+        return postService.updatePost(updatedPost,updatedTag,model);
+    }
 
 
 }
