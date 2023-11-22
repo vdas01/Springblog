@@ -100,7 +100,6 @@ public class PostServiceImpl implements  PostService{
     public String deletePost(int postId) {
         if (postRepository.existsById(postId)) {
             postRepository.deleteById(postId);
-            System.out.println("Deletion successfull");
         } else {
             // Handle the case where the post with the given ID is not found
         }

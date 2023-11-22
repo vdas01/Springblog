@@ -3,8 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Post</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/Post.css">
 </head>
 <body>
-<h1>Hello post</h1>
+    <div class="container">
+    <nav id="navbar">
+        <h1>My Blog Application</h1>
+        <div class="middle">
+            <a th:href="@{/newpost}" >Create Post</a>
+        </div>
+        <div class="right">
+            <div class="upper">
+                <div class="search_box">
+                    <i class="fa-solid fa-magnifying-glass search_icon"></i>
+                    <input type="text" name="search" id="search_bar" placeholder="Search...">
+                </div>
+                <div class="user_box">
+                    vdas53073@gmail.com
+                </div>
+                <div class="login_box">
+                    Login
+                </div>
+            </div>
+            <div class="lower">
+                <div class="filter_box">Filter</div>
+                <div class="sort_box">Sort</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="post_container">
+        <h4 class="post_title" th:text="${post.title}">Ice Dragon</h4>
+        <small class="post_author_descp" th:text="${post.author +','+post.createdAt}">Vishal Das, 18/20/23</small>
+        <p class="post_content" th:text="${post.content}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum, molestiae commodi? Ipsum unde adipisci molestias velit, et doloribus libero voluptates eos animi natus quae perferendis amet labore cum, molestiae blanditiis.</p>
+
+        <a th:href="@{/editpost{postId}(postId=${post.id})}" class="buttons" id="post_edit_btn">Edit</a>
+        <a th:href="@{/deletepost{postId}(postId=${post.id})}" class="buttons" id="post_delete_btn">Delete</a>
+    </div>
+    <div class="comment_conatiner">
+        <div class="comments">
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti nam rerum nostrum qui vero nobis harum deleniti asperiores id neque.
+                loremipsum50
+            </p>
+            <a href="" id="edit_comment" class="buttons">Edit</a>
+            <a href="" id="delete_comment" class="buttons">Delete</a>
+        </div>
+        <div class="typed_comment_box">
+            <input type="text" name="comment" id="typed_comment">
+            <a href="" id="post_comment" class="buttons">Post Comment</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
