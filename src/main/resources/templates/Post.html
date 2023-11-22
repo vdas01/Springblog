@@ -43,13 +43,32 @@
         <a th:href="@{/editpost{postId}(postId=*{id})}" class="buttons" id="post_edit_btn">Edit</a>
         <a th:href="@{/deletepost{postId}(postId=*{id})}" class="buttons" id="post_delete_btn">Delete</a>
     </div>
-    <div class="comment_conatiner">
-        <div class="comments"  th:each="tempcomment : ${displaycomments}">
-            <h6 id="title" th:text="${tempcomment.name}"></h6>
-            <p th:text="${tempcomment.comment}"></p>
-            <a href="" id="edit_comment" class="buttons">Edit</a>
-            <a href="" id="delete_comment" class="buttons">Delete</a>
+
+
+
+        <div th:each="tempcomment : ${displaycomments}" class="comments">
+            <form th:if="${not #strings.equals(editing, tempcomment.id)}" th:action="@{/editComment}" method="post">
+                <h4 id="title" th:text="${tempcomment.name}"></h4>
+                <p th:text="${tempcomment.comment}"></p>
+                <input type="hidden" name="commentId" th:value="${tempcomment.id}"/>
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <a th:href="@{/deleteComment/{commentId}/{postId}(commentId=${tempcomment.id},postId=${post.id})}"
+                   id="delete_comment" class="buttons">Delete</a>
+
+                <button type="submit" id="edit_comment" class="buttons">Edit</button>
+            </form>
+
+            <form th:if="${ #strings.equals(editing, tempcomment.id)}" th:action="@{/saveComment}" method="post">
+                <!-- Use Thymeleaf's inline expression to set the initial value of the input field -->
+                <input type="text" name="editedComment" th:value="${tempcomment.comment}"/>
+                <button type="submit" class="buttons">Save</button>
+
+                <input type="hidden" name="commentId" th:value="${tempcomment.id}"/>
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+            </form>
         </div>
+
+
         <form class="typed_comment_box" th:object="${newComment}" th:action="@{/createcomment{postId}(postId=${post.id})}">
             <input type="text" name="comment" id="typed_comment" th:field="*{comment}">
             <button type="submit" id="post_comment" class="buttons">Post Comment</button>

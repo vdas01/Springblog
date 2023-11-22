@@ -8,6 +8,7 @@ import io.mountblue.blogapplication.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +40,7 @@ public class PostServiceImpl implements  PostService{
             Post post = retrievedPostById.get();
             List<Tag> tags = post.getTags();
             Comment newComment = new Comment();
-
             List<Comment> comments = commentRepository.findAll();
-
-            for (Comment comment : comments) {
-                System.out.println("Comment ID: " + comment.getId());
-                System.out.println(comment.getComment());
-                System.out.println("-----");
-            }
 
             model.addAttribute("post", post);
             model.addAttribute("tags",tags);

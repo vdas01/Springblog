@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@SessionAttributes("editing")
 public class PostController {
     PostService postService;
     @Autowired
@@ -48,28 +49,26 @@ public class PostController {
                                      @ModelAttribute("id")int postId,Model model){
         return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
-
-    @Autowired
-    private PostRepository postRepository;
+    
     @GetMapping("/deletepost{postId}")
     public String processDeletePost(@PathVariable int postId){
         return postService.deletePost(postId);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<Post>> getAllposts() {
-        List<Post> posts = postRepository.findAll();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
-    }
+//    @GetMapping("/getAll")
+//    public ResponseEntity<List<Post>> getAllposts() {
+//        List<Post> posts = postRepository.findAll();
+//        return new ResponseEntity<>(posts, HttpStatus.OK);
+//    }
 
-    @GetMapping("/editTitle")
-    public ResponseEntity<Post> editTitle(@RequestParam Integer postId) {
-
-        Post fromDB = postRepository.findById(postId).get();
-
-        return new ResponseEntity<>(fromDB, HttpStatus.OK);
-
-    }
+//    @GetMapping("/editTitle")
+//    public ResponseEntity<Post> editTitle(@RequestParam Integer postId) {
+//
+//        Post fromDB = postRepository.findById(postId).get();
+//
+//        return new ResponseEntity<>(fromDB, HttpStatus.OK);
+//
+//    }
 
 //    @GetMapping("/editForm")
 //    public String editForm(Model model, @RequestParam Integer postId) {
@@ -82,5 +81,6 @@ public class PostController {
 //        return "UpdatePost";
 //
 //    }
+
 
 }

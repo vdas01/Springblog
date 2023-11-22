@@ -2,21 +2,27 @@ package io.mountblue.blogapplication.controllers;
 
 import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
+import io.mountblue.blogapplication.entity.Tag;
 import io.mountblue.blogapplication.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import org.thymeleaf.expression.Strings;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
+@SessionAttributes("editing")
 public class CommentController {
+    @Autowired
     CommentService commentService;
 
-    @Autowired
+    private String editing = null;
+
+
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
@@ -27,4 +33,22 @@ public class CommentController {
         commentService.addComment(postId,newComment);
         return "redirect:/";
     }
+
+    @PostMapping("/editComment")
+    public String processEditComment(@RequestParam Integer commentId,@RequestParam int  postId,Model model){
+        return commentService.editComment(commentId,postId,model);
+    }
+
+    @PostMapping("/saveComment")
+    public String processUpdateComment(@RequestParam String editedComment, @RequestParam Integer commentId,
+                                       @RequestParam int  postId, SessionStatus sessionStatus){
+        return commentService.updateComment(editedComment,commentId,postId,sessionStatus);
+    }
+
+    @GetMapping("/deleteComment/{commentId}/{postId}")
+    public String processDeleteComment(@PathVariable Integer commentId,@PathVariable Integer postId){
+        return commentService.deleteComment(commentId,postId);
+    }
+
+
 }
