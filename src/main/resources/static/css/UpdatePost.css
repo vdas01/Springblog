@@ -1,0 +1,138 @@
+body {
+  background-color: white;
+  color: black;
+  font-family: Arial, sans-serif; /* Add your preferred font stack */
+  margin: 0;
+}
+
+
+
+
+.middle,
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.right .upper {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.search_box {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.search_icon {
+  margin-right: 5px;
+}
+
+#search_bar {
+  padding: 5px;
+}
+
+.user_box,
+.login_box {
+  margin-right: 10px;
+}
+
+.lower {
+  display: flex;
+  margin-top: 5px;
+}
+
+.filter_box,
+.sort_box {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+form {
+  margin: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+h1 {
+  color: black;
+}
+
+.container{
+    min-height: 100vh;
+    width: 100%;
+    padding: 1.5rem;
+}
+.container h1{
+    font-size: 2.5rem;
+}
+.login_box,.user_box,.filter_box,.sort_box{
+    border: 2px solid black;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 8vw;
+}
+.right{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+#navbar{
+    display: flex;
+    justify-content: space-between;
+}
+.upper,.lower{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+}
+.filter_box,.sort_box{
+    width:8vw;
+}
+.search_box{
+    position: relative;
+
+}
+#search_bar{
+    padding: 1vh 3vh;
+    border: 2px solid black;
+}
+.search_icon{
+position: absolute;
+top:10px;
+left:10px;
+}
+
+.buttons{
+    text-decoration: none;
+    background-color:rgb(39, 39, 39);
+    color: white;
+    cursor: pointer;
+    padding: 0.5vh 0.8vh;
+}

@@ -2,15 +2,35 @@
 <html xmlns:th="http://wwww.thymeleaf.org">
 <head>
     <title>Update blog</title>
+    <link rel="stylesheet" href="css/UpdatePost.css">
 </head>
 <body>
-<header>
+<nav id="navbar">
     <h1>My Blog Application</h1>
-    <div>
-        <input type="text" placeholder="Search">
-        <a href="#">Login</a>
+    <div class="middle">
+        <a th:href="@{/newpost}" class="buttons">Create Post</a>
     </div>
-</header>
+    <div class="right">
+        <div class="upper">
+            <div class="search_box">
+                <i class="fa-solid fa-magnifying-glass search_icon"></i>
+                <input type="text" name="search" id="search_bar" placeholder="Search...">
+            </div>
+            <div class="user_box">
+                vdas53073@gmail.com
+            </div>
+            <div class="login_box">
+                Login
+            </div>
+        </div>
+        <div class="lower">
+            <div class="filter_box">Filter</div>
+            <div class="sort_box">Sort</div>
+        </div>
+    </div>
+</nav>
+
+
 <form th:action="@{/updatepost}" method="post" th:object="${post}">
     <input type="hidden"  id="id" name="id" th:field="*{id}">
     <label for="title">Title:</label>
@@ -30,6 +50,6 @@
 
     <button type="submit">Update Post</button>
 </form>
-<h1>Hello update post</h1>
+
 </body>
 </html>

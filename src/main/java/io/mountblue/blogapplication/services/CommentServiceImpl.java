@@ -64,7 +64,6 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public String deleteComment(Integer commentId,Integer postId) {
-        System.out.println(postId + " " + commentId);
         Comment comment = commentRepository.findById(commentId).get();
         commentRepository.delete(comment);
         return "redirect:/post" + postId;

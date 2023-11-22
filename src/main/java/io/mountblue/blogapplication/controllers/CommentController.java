@@ -30,8 +30,7 @@ public class CommentController {
     //add comment
     @GetMapping("/createcomment{postId}")
     public String processAddComment(@PathVariable Integer postId, @ModelAttribute("comment") String newComment){
-        commentService.addComment(postId,newComment);
-        return "redirect:/";
+        return commentService.addComment(postId,newComment);
     }
 
     @PostMapping("/editComment")
