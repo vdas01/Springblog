@@ -3,6 +3,7 @@ package io.mountblue.blogapplication.services;
 import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,12 @@ public class PostServiceImpl implements  PostService{
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
+    public PostServiceImpl(CommentRepository commentRepository) {
+        this.commentRepository = commentRepository;
+    }
 
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -33,9 +40,18 @@ public class PostServiceImpl implements  PostService{
             List<Tag> tags = post.getTags();
             Comment newComment = new Comment();
 
+            List<Comment> comments = commentRepository.findAll();
+
+            for (Comment comment : comments) {
+                System.out.println("Comment ID: " + comment.getId());
+                System.out.println(comment.getComment());
+                System.out.println("-----");
+            }
+
             model.addAttribute("post", post);
             model.addAttribute("tags",tags);
             model.addAttribute("newComment",newComment);
+            model.addAttribute("displaycomments",comments);
         }
         return "Post";
     }

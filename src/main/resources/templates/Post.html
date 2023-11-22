@@ -44,11 +44,9 @@
         <a th:href="@{/deletepost{postId}(postId=*{id})}" class="buttons" id="post_delete_btn">Delete</a>
     </div>
     <div class="comment_conatiner">
-        <div class="comments">
-            <h6 id="title">Vishal</h6>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti nam rerum nostrum qui vero nobis harum deleniti asperiores id neque.
-                loremipsum50
-            </p>
+        <div class="comments"  th:each="tempcomment : ${displaycomments}">
+            <h6 id="title" th:text="${tempcomment.name}"></h6>
+            <p th:text="${tempcomment.comment}"></p>
             <a href="" id="edit_comment" class="buttons">Edit</a>
             <a href="" id="delete_comment" class="buttons">Delete</a>
         </div>
