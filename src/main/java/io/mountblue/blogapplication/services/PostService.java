@@ -16,4 +16,6 @@ public interface PostService {
 
     String updatePost(Post updatedPost,Tag updatedTag,int postId,Model model);
 
+    String deletePost(int postId);
+
 }

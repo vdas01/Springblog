@@ -22,23 +22,18 @@ public class PostServiceImpl implements  PostService{
 
     public PostServiceImpl(){}
 
+    @Override
     public String getPostById(int postId, Model model){
         Optional<Post> retrievedPostById = postRepository.findById(postId);
 
         if (retrievedPostById.isPresent()) {
-
             Post post = retrievedPostById.get();
             model.addAttribute("inputPost", post);
-
-            System.out.println("retreived post :- ");
-            System.out.println(post.getId());
-            System.out.println(post.getAuthor());
-            System.out.println(post.getExcerpt());
-
         }
         return "Post";
     }
 
+    @Override
     public String navigateNewPost(Model model){
         Post newPost = new Post();
         Tag newTag = new Tag();
@@ -63,6 +58,7 @@ public class PostServiceImpl implements  PostService{
         return "redirect:/";
     }
 
+    @Override
     public String navigateEditPost(int postId,Model model){
         Optional<Post> retrievedPostById = postRepository.findById(postId);
         if (retrievedPostById.isPresent()){
@@ -85,6 +81,7 @@ public class PostServiceImpl implements  PostService{
         return "UpdatePost";
     }
 
+    @Override
     public String updatePost(Post updatedPost,Tag updatedTags,int postId,Model model){
             updatedPost.setId(postId);
 
@@ -96,6 +93,17 @@ public class PostServiceImpl implements  PostService{
 
             postRepository.save(updatedPost);
 
+        return "redirect:/";
+    }
+
+    @Override
+    public String deletePost(int postId) {
+        if (postRepository.existsById(postId)) {
+            postRepository.deleteById(postId);
+            System.out.println("Deletion successfull");
+        } else {
+            // Handle the case where the post with the given ID is not found
+        }
         return "redirect:/";
     }
 

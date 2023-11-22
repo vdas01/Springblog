@@ -47,5 +47,10 @@ public class PostController {
         return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
 
+    @GetMapping("/deletepost{postId}")
+    public String processDeletePost(@PathVariable int postId){
+        return postService.deletePost(postId);
+    }
+
 
 }

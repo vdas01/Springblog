@@ -20,11 +20,6 @@ public class AppDAOImpl implements AppDAO{
         this.entityManager = entityManager;
     }
 
-    @Override
-    @Transactional
-    public void save(Post thePost) {
-        entityManager.persist(thePost);
-    }
 
     @Override
     public List<Post> findAllPosts() {
