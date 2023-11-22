@@ -3,7 +3,6 @@ package io.mountblue.blogapplication.controllers;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
-import io.mountblue.blogapplication.repository.PostRepository;
 import io.mountblue.blogapplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Optional;
 
 @Controller
 public class PostController {
@@ -44,10 +41,10 @@ public class PostController {
         return postService.navigateEditPost(postId,model);
     }
 
-    @GetMapping("/updatepost")
-    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tag")Tag updatedTag,
-                                     Model model){
-        return postService.updatePost(updatedPost,updatedTag,model);
+    @PostMapping("/updatepost")
+    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")Tag updatedTags,
+                                     @ModelAttribute("id")int postId,Model model){
+        return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
 
 

@@ -38,10 +38,10 @@ public class Post {
     @CreationTimestamp
     private Date publishedAt;
 
-    @Column(name = "is_published")
+    @Column(name = "is_published",updatable = false)
     private boolean isPublished;
 
-    @Column(name="created_at")
+    @Column(name="created_at",updatable = false)
     @CreationTimestamp
     private Date createdAt;
 

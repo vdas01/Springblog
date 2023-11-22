@@ -21,7 +21,7 @@ public class Tag {
     @NotEmpty(message = "Name cannot be empty")
     private String name;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at",updatable = false)
     @CreationTimestamp
     private Date createdAt;
 
