@@ -52,6 +52,12 @@ public class Post {
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="post_tag",joinColumns = @JoinColumn(name = "post_id"),inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Comment> comments;
+
+    //The mappedBy attribute is used to specify the field in the Comment entity that owns the relationship.
+    //In this case, it's the post field in the Comment entity.
     public Post(){
 
     }
@@ -62,6 +68,14 @@ public class Post {
         this.content = content;
         this.author = author;
         this.isPublished = isPublished;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public Integer getId() {
@@ -143,6 +157,12 @@ public class Post {
         if(tags == null)
             tags = new ArrayList<>();
         tags.add(theTag);
+    }
+
+    public void addComment(Comment newComment){
+        if(comments == null)
+            comments = new ArrayList<>();
+        comments.add(newComment);
     }
 
     //clear tags

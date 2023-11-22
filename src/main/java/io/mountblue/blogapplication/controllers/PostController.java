@@ -3,14 +3,16 @@ package io.mountblue.blogapplication.controllers;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.repository.PostRepository;
 import io.mountblue.blogapplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class PostController {
@@ -47,10 +49,38 @@ public class PostController {
         return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
 
+    @Autowired
+    private PostRepository postRepository;
     @GetMapping("/deletepost{postId}")
     public String processDeletePost(@PathVariable int postId){
         return postService.deletePost(postId);
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Post>> getAllposts() {
+        List<Post> posts = postRepository.findAll();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/editTitle")
+    public ResponseEntity<Post> editTitle(@RequestParam Integer postId) {
+
+        Post fromDB = postRepository.findById(postId).get();
+
+        return new ResponseEntity<>(fromDB, HttpStatus.OK);
+
+    }
+
+//    @GetMapping("/editForm")
+//    public String editForm(Model model, @RequestParam Integer postId) {
+//
+//        Post fromDB = postRepository.findById(postId).get();
+//
+//        model.addAttribute("toUpdatePost",  fromDB);
+//
+//
+//        return "UpdatePost";
+//
+//    }
 
 }

@@ -1,5 +1,6 @@
 package io.mountblue.blogapplication.services;
 
+import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
 import io.mountblue.blogapplication.repository.PostRepository;
@@ -13,9 +14,10 @@ import java.util.Optional;
 @Service
 public class PostServiceImpl implements  PostService{
 
+    @Autowired
     private PostRepository postRepository;
 
-    @Autowired
+
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
@@ -29,8 +31,11 @@ public class PostServiceImpl implements  PostService{
         if (retrievedPostById.isPresent()) {
             Post post = retrievedPostById.get();
             List<Tag> tags = post.getTags();
+            Comment newComment = new Comment();
+
             model.addAttribute("post", post);
             model.addAttribute("tags",tags);
+            model.addAttribute("newComment",newComment);
         }
         return "Post";
     }
