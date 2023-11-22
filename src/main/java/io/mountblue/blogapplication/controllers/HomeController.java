@@ -19,8 +19,6 @@ public class HomeController {
     @GetMapping("/")
     public String handleHome(Model theModel){
         List<Post> posts = appDAO.findAllPosts();
-        System.out.println(posts);
-
         theModel.addAttribute("posts",posts);
 
         return "Home";

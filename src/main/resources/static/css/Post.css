@@ -109,3 +109,9 @@ left:10px;
     font-size:1.7rem;
     font-style: italic;
 }
+.tag_container{
+    /* border: 2px solid black; */
+    padding: 1rem;
+    text-align: center;
+}
+

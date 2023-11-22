@@ -25,14 +25,8 @@
     <label for="author">Author:</label>
     <input type="text" id="author" name="author" th:field="*{author}" required>
 
-<!--    <label for="tags">Tags (comma-separated):</label>-->
+    <label for="tags">Tags (comma-separated):</label>
     <input type="text" id="tags" name="tags" th:value="${tags}" required>
-<!--    <select id="selectField" name="selectField">-->
-<!--        <option th:each="tag : ${tags}"-->
-<!--                th:value="${tag.name}"-->
-<!--                th:text="${tag.name}">-->
-<!--        </option>-->
-<!--    </select>-->
 
     <button type="submit">Update Post</button>
 </form>

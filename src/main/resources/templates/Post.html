@@ -33,13 +33,15 @@
         </div>
     </nav>
 
-    <div class="post_container">
-        <h4 class="post_title" th:text="${post.title}">Ice Dragon</h4>
-        <small class="post_author_descp" th:text="${post.author +','+post.createdAt}">Vishal Das, 18/20/23</small>
-        <p class="post_content" th:text="${post.content}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum, molestiae commodi? Ipsum unde adipisci molestias velit, et doloribus libero voluptates eos animi natus quae perferendis amet labore cum, molestiae blanditiis.</p>
-
-        <a th:href="@{/editpost{postId}(postId=${post.id})}" class="buttons" id="post_edit_btn">Edit</a>
-        <a th:href="@{/deletepost{postId}(postId=${post.id})}" class="buttons" id="post_delete_btn">Delete</a>
+    <div class="post_container" th:object="${post}">
+        <h4 class="post_title" th:text="*{title}">Ice Dragon</h4>
+        <small class="post_author_descp" th:text="*{author +','+createdAt}">Vishal Das, 18/20/23</small>
+        <p class="post_content" th:text="*{content}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum, molestiae commodi? Ipsum unde adipisci molestias velit, et doloribus libero voluptates eos animi natus quae perferendis amet labore cum, molestiae blanditiis.</p>
+        <div class="tag_container"  th:each="tag : ${tags}">
+            <span class="tag buttons" th:text="${tag.name}"></span>
+        </div>
+        <a th:href="@{/editpost{postId}(postId=*{id})}" class="buttons" id="post_edit_btn">Edit</a>
+        <a th:href="@{/deletepost{postId}(postId=*{id})}" class="buttons" id="post_delete_btn">Delete</a>
     </div>
     <div class="comment_conatiner">
         <div class="comments">

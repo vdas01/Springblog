@@ -37,9 +37,12 @@
             <h4 class="blog_title" th:text="${post.title}"></h4>
             <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
             <p class="excerpt" th:text="${post.excerpt}"></p>
-            <a th:href="@{/post{postId}(postId=${post.id})}" >Read More</a>
-            <a th:href="@{/editpost{postId}(postId=${post.id})}">Edit</a>
-            <a th:href="@{/deletepost{postId}(postId=${post.id})}">Delete</a>
+            <div class="tag_container"  th:each="tag : ${post.getTags()}">
+                <span class="tag buttons" th:text="${tag.name}"></span>
+            </div>
+            <a th:href="@{/post{postId}(postId=${post.id})}" class="buttons">Read More</a>
+            <a th:href="@{/editpost{postId}(postId=${post.id})}" class="buttons">Edit</a>
+            <a th:href="@{/deletepost{postId}(postId=${post.id})}" class="buttons">Delete</a>
         </div>
     </div>
 

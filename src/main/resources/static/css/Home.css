@@ -86,3 +86,15 @@ left:10px;
     font-size: 1.6rem;
     margin-top: 2vh;
 }
+.tag_container{
+    /* border: 2px solid black; */
+    padding: 1rem;
+    text-align: center;
+}
+.buttons{
+    text-decoration: none;
+    background-color:rgb(39, 39, 39);
+    color: white;
+    cursor: pointer;
+    padding: 0.5vh 0.8vh;
+}

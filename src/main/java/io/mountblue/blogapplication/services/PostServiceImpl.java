@@ -28,7 +28,9 @@ public class PostServiceImpl implements  PostService{
 
         if (retrievedPostById.isPresent()) {
             Post post = retrievedPostById.get();
-            model.addAttribute("inputPost", post);
+            List<Tag> tags = post.getTags();
+            model.addAttribute("post", post);
+            model.addAttribute("tags",tags);
         }
         return "Post";
     }
