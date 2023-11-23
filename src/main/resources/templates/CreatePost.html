@@ -2,15 +2,37 @@
 <html xmlns:th="http://wwww.thymeleaf.org">
 <head>
     <title>Create Blog</title>
+    <link rel="stylesheet" href="css/CreatePost.css">
 </head>
 <body>
-<header>
+
+<nav id="navbar">
     <h1>My Blog Application</h1>
-    <div>
-        <input type="text" placeholder="Search">
-        <a href="#">Login</a>
+    <div class="middle">
+        <a th:href="@{/newpost}" >Create Post</a>
     </div>
-</header>
+    <div class="right">
+        <div class="upper">
+            <div class="search_box">
+                <i class="fa-solid fa-magnifying-glass search_icon"></i>
+                <input type="text" name="search" id="search_bar" placeholder="Search...">
+            </div>
+            <div class="user_box">
+                vdas53073@gmail.com
+            </div>
+            <div class="login_box">
+                Login
+            </div>
+        </div>
+        <div class="lower">
+            <div class="filter_box">Filter</div>
+            <div class="sort_box">Sort</div>
+        </div>
+    </div>
+</nav>
+
+
+
 <form th:action="@{/createpost}" method="post" th:object="${post}">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" th:field="*{title}" required>

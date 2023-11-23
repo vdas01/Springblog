@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -82,5 +83,9 @@ public class PostController {
 //
 //    }
 
+    @GetMapping("/change")
+    public String processSortPost(@RequestParam("sort") String sortBy,Model theModel,RedirectAttributes redirectAttributes){
+      return postService.sortPost(sortBy,theModel,redirectAttributes);
+    }
 
 }

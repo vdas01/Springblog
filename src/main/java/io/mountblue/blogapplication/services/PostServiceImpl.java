@@ -8,7 +8,7 @@ import io.mountblue.blogapplication.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -120,6 +120,24 @@ public class PostServiceImpl implements  PostService{
         } else {
             // Handle the case where the post with the given ID is not found
         }
+        return "redirect:/";
+    }
+
+    @Override
+    public String sortPost(String sortBy,Model theModel, RedirectAttributes redirectAttributes) {
+        List<Post> tempPost;
+
+        if(sortBy.equals("title")){
+            tempPost = postRepository.findAllByOrderByTitleAsc();
+        }else if(sortBy.equals("author")){
+            tempPost = postRepository.findAllByOrderByAuthorAsc();
+        }else if(sortBy.equals("publishedAtAsc")){
+            tempPost =  postRepository.findAllByOrderByCreatedAtAsc();
+        }else{
+            tempPost = postRepository.findAllByOrderByCreatedAtDesc();
+        }
+
+        redirectAttributes.addAttribute("tempPost", tempPost);
         return "redirect:/";
     }
 

@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 
 @Controller
 public class HomeController {
@@ -16,11 +20,20 @@ public class HomeController {
     @Autowired
     AppDAO appDAO;
 
-    @GetMapping("/")
-    public String handleHome(Model theModel){
-        List<Post> posts = appDAO.findAllPosts();
-        theModel.addAttribute("posts",posts);
+    public HomeController(AppDAO appDAO) {
+        this.appDAO = appDAO;
+    }
 
+    @GetMapping("/")
+    public String handleHome(@RequestParam(name = "tempPost",required = false) List<Post> tempPost, Model theModel){
+
+        if(tempPost == null) {
+            List<Post> posts = appDAO.findAllPosts();
+            theModel.addAttribute("posts",posts);
+        }
+        else {
+            theModel.addAttribute("posts",tempPost);
+        }
         return "Home";
     }
 }

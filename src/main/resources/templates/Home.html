@@ -11,7 +11,7 @@
     <nav id="navbar">
         <h1>My Blog Application</h1>
         <div class="middle">
-            <a th:href="@{/newpost}" >Create Post</a>
+            <a th:href="@{/newpost}" class="buttons">Create Post</a>
         </div>
         <div class="right">
             <div class="upper">
@@ -28,12 +28,20 @@
             </div>
             <div class="lower">
                 <div class="filter_box">Filter</div>
-                <div class="sort_box">Sort</div>
+
+                <select name="sort"  class="sort_box" onchange="window.location.href='/change?sort=' + this.value;">
+                    <option value="" disabled selected>Sort By</option>
+                    <option value="title">Title</option>
+                    <option value="author">Author</option>
+                    <option value="publishedAtAsc">Published At Ascending</option>
+                    <option value="publishedAtDesc">Published At Descending</option>
+                </select>
+
             </div>
         </div>
     </nav>
-    <div class="blog_container" th:each="post : ${posts}">
-        <div class="blog">
+    <div class="blog_container" >
+        <div class="blog" th:each="post : ${posts}">
             <h4 class="blog_title" th:text="${post.title}"></h4>
             <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
             <p class="excerpt" th:text="${post.excerpt}"></p>

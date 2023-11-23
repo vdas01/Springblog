@@ -59,7 +59,7 @@
             </form>
 
             <form th:if="${ #strings.equals(editing, tempcomment.id)}" th:action="@{/saveComment}" method="post">
-                <!-- Use Thymeleaf's inline expression to set the initial value of the input field -->
+
                 <input type="text" name="editedComment" th:value="${tempcomment.comment}"/>
                 <button type="submit" class="buttons">Save</button>
 

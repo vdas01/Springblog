@@ -3,6 +3,9 @@ package io.mountblue.blogapplication.services;
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 public interface PostService {
 
@@ -18,4 +21,5 @@ public interface PostService {
 
     String deletePost(int postId);
 
+    String sortPost(String sortBy, Model theModel, RedirectAttributes redirectAttributes);
 }
