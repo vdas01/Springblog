@@ -6,9 +6,13 @@ import io.mountblue.blogapplication.entity.Tag;
 import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,26 @@ public class PostServiceImpl implements  PostService{
     }
 
     public PostServiceImpl(){}
+
+    @Override
+    public String findAllPosts(int page,List<Post>tempPost,Model theModel) {
+            //currpage,perpage
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        theModel.addAttribute("currentPage",page);
+        theModel.addAttribute("totalpages",posts.getTotalPages());
+        theModel.addAttribute("posts",posts);
+
+//        if(tempPost == null) {
+//            List<Post> posts = postRepository.findAll();
+//            theModel.addAttribute("posts",posts);
+//        }
+//        else {
+//            theModel.addAttribute("posts",tempPost);
+//        }
+        return "Home";
+    }
 
     @Override
     public String getPostById(int postId, Model model){

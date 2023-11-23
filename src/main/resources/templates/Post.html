@@ -9,7 +9,7 @@
 <body>
     <div class="container">
     <nav id="navbar">
-        <h1>My Blog Application</h1>
+        <h1> <a href="/" style="text-decoration: none; color: black;">My Blog Application</a></h1>
         <div class="middle">
             <a th:href="@{/newpost}" >Create Post</a>
         </div>
@@ -37,8 +37,10 @@
         <h4 class="post_title" th:text="*{title}">Ice Dragon</h4>
         <small class="post_author_descp" th:text="*{author +','+createdAt}">Vishal Das, 18/20/23</small>
         <p class="post_content" th:text="*{content}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum, molestiae commodi? Ipsum unde adipisci molestias velit, et doloribus libero voluptates eos animi natus quae perferendis amet labore cum, molestiae blanditiis.</p>
-        <div class="tag_container"  th:each="tag : ${tags}">
-            <span class="tag buttons" th:text="${tag.name}"></span>
+        <div class="tag_container"  >
+                <span th:each="tag : ${post.getTags()}">
+                <span class="tag buttons" th:text="${tag.name}"></span>
+                </span>
         </div>
         <a th:href="@{/editpost{postId}(postId=*{id})}" class="buttons" id="post_edit_btn">Edit</a>
         <a th:href="@{/deletepost{postId}(postId=*{id})}" class="buttons" id="post_delete_btn">Delete</a>

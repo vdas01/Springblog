@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <nav id="navbar">
-        <h1>My Blog Application</h1>
+        <h1> <a href="/" style="text-decoration: none; color: black;">My Blog Application</a></h1>
         <div class="middle">
             <a th:href="@{/newpost}" class="buttons">Create Post</a>
         </div>
@@ -45,8 +45,10 @@
             <h4 class="blog_title" th:text="${post.title}"></h4>
             <small class="blog_author_descp" th:text="${post.author +','+post.createdAt}"></small>
             <p class="excerpt" th:text="${post.excerpt}"></p>
-            <div class="tag_container"  th:each="tag : ${post.getTags()}">
+            <div class="tag_container"  >
+                <span th:each="tag : ${post.getTags()}">
                 <span class="tag buttons" th:text="${tag.name}"></span>
+                </span>
             </div>
             <a th:href="@{/post{postId}(postId=${post.id})}" class="buttons">Read More</a>
             <a th:href="@{/editpost{postId}(postId=${post.id})}" class="buttons">Edit</a>
@@ -54,10 +56,18 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div id="prev">< &nbsp; Previous</div>
-        <div id="next">Next &nbsp; ></div>
-    </footer>
+    <div class="pagination">
+        <li th:if="${currentPage != 0}" class="page_item"><a  class="page_link"  th:href="@{/(page=${currentPage - 1})}">Previous</a></li>
+
+        <li th:classappend="${currentPage == i-1 ? 'active' : ''}" th:each="i : ${#numbers.sequence(1,totalpages,1)}"
+            class="page_item"><a class="page_link" th:href="@{/(page=${i-1})}">
+            <span th:text="${i}"></span></a></li>
+        <li th:if="${currentPage + 1 != totalpages}" class="page_item">
+            <a href="" class="page_link" th:href="@{/(page=${currentPage + 1})}" >Next</a>
+        </li>
+
+    </div>
+
 </div>
 </body>
 </html>

@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PostService {
 
+    String findAllPosts(int page,List<Post>tempPost,Model theModel);
+
     String getPostById(int postId, Model model);
 
     String navigateNewPost(Model model);

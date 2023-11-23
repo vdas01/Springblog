@@ -24,6 +24,11 @@ public class PostController {
         this.postService = postService;
     }
 
+    @GetMapping("/")
+    public String processAllPosts(@RequestParam(defaultValue =  "0")int page,@RequestParam(name = "tempPost",required = false) List<Post> tempPost, Model theModel){
+       return postService.findAllPosts(page,tempPost,theModel);
+    }
+
     // get post by id;
     @GetMapping("/post{postId}")
     public String retreivedPostById(@PathVariable Integer postId, Model model) {
