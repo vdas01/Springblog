@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements  PostService{
@@ -25,6 +25,13 @@ public class PostServiceImpl implements  PostService{
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private TagService tagService;
+
+    public PostServiceImpl(TagService tagService) {
+        this.tagService = tagService;
+    }
 
     public PostServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
@@ -37,10 +44,15 @@ public class PostServiceImpl implements  PostService{
     public PostServiceImpl(){}
 
     @Override
-    public String findAllPosts(int page,List<Post>tempPost,Model theModel) {
+    public String findAllPosts(int page,String sortBy,List<Post>tempPost,Model theModel) {
             //currpage,perpage
-        Pageable pageable = PageRequest.of(page, 3);
-        Page<Post> posts = postRepository.findAll(pageable);
+
+        Pageable pageable;
+        if(sortBy == null)
+                pageable = PageRequest.of(page, 3);
+        else
+            pageable = PageRequest.of(page,3, Sort.by(sortBy));
+        Page<Post> posts = postRepository.findAllBy(pageable);
 
         theModel.addAttribute("currentPage",page);
         theModel.addAttribute("totalpages",posts.getTotalPages());
@@ -53,7 +65,8 @@ public class PostServiceImpl implements  PostService{
 //        else {
 //            theModel.addAttribute("posts",tempPost);
 //        }
-        return "Home";
+
+            return "Home";
     }
 
     @Override
@@ -86,16 +99,27 @@ public class PostServiceImpl implements  PostService{
     }
 
     public String createPost(Post newPost, Tag newTag){
-        Post post = new Post();
-        post = newPost;
+        Map<String,Tag> tempTags = new HashMap<>();
+        List<Tag> allTags = tagService.findAllTags();
+
+        for(Tag tag:allTags){
+            String name = tag.getName();
+            tempTags.put(name,tag);
+        }
 
         String[] tagsArray = newTag.getName().split(",");
         for(String tempTag: tagsArray){
-            Tag tag = new Tag(tempTag);
-            post.addTags(tag);
+           if(tempTags.containsKey(tempTag)){
+               newPost.addTags(tempTags.get(tempTag));
+           }
+           else {
+               tempTag = tempTag.trim();
+               Tag tag = new Tag(tempTag);
+               newPost.addTags(tag);
+           }
         }
 
-        postRepository.save(post);
+        postRepository.save(newPost);
         return "redirect:/";
     }
 
@@ -123,14 +147,28 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public String updatePost(Post updatedPost,Tag updatedTags,int postId,Model model){
-            updatedPost.setId(postId);
+    public String updatePost(Post updatedPost,String updatedTags,int postId,Model model){
 
-            String[] tagsArray = updatedTags.getName().split(",");
-            for(String tempTag: tagsArray){
+        Map<String,Tag> tempTags = new HashMap<>();
+        List<Tag> allTags = tagService.findAllTags();
+
+        for(Tag tag:allTags){
+            String name = tag.getName();
+            tempTags.put(name,tag);
+        }
+
+        String[] tagsArray = updatedTags.split(",");
+
+        for(String tempTag: tagsArray){
+            if(tempTags.containsKey(tempTag)){
+                updatedPost.addTags(tempTags.get(tempTag));
+            }
+            else {
+                tempTag = tempTag.trim();
                 Tag tag = new Tag(tempTag);
                 updatedPost.addTags(tag);
             }
+        }
 
             postRepository.save(updatedPost);
 
@@ -164,6 +202,29 @@ public class PostServiceImpl implements  PostService{
         redirectAttributes.addAttribute("tempPost", tempPost);
         return "redirect:/";
     }
+
+//    @Override
+//    public Page<Post> searchPosts(int page,String search,Model theModel) {
+//
+//        Pageable pageable = PageRequest.of(page, 3);
+//        Page<Post> posts = postRepository.findAllBy(pageable);
+//
+//        theModel.addAttribute("currentPage",page);
+//        theModel.addAttribute("totalpages",posts.getTotalPages());
+//        theModel.addAttribute("posts",posts);
+//
+//
+//    }
+
+    @Override
+    public Page<Post> findPaginated(int pageNo, int pageSize,String sortField,String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1,pageSize,sort);
+        return postRepository.findAll(pageable);
+    }
+
+
 
 
 }

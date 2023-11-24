@@ -3,11 +3,9 @@ package io.mountblue.blogapplication.controllers;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
-import io.mountblue.blogapplication.repository.PostRepository;
 import io.mountblue.blogapplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +15,24 @@ import java.util.List;
 
 @Controller
 @SessionAttributes("editing")
-public class PostController {
+public class
+PostController {
     PostService postService;
     @Autowired
     public PostController(PostService postService) {
         this.postService = postService;
     }
 
+//    @GetMapping("/")
+//    public String home(){
+//
+//    }
+//
+
     @GetMapping("/")
-    public String processAllPosts(@RequestParam(defaultValue =  "0")int page,@RequestParam(name = "tempPost",required = false) List<Post> tempPost, Model theModel){
-       return postService.findAllPosts(page,tempPost,theModel);
+    public String processAllPosts(Model theModel){
+        return  findPaginated(1,"title","asc",theModel);
+
     }
 
     // get post by id;
@@ -51,8 +57,9 @@ public class PostController {
     }
 
     @PostMapping("/updatepost")
-    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")Tag updatedTags,
+    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")String updatedTags,
                                      @ModelAttribute("id")int postId,Model model){
+        System.out.println(updatedTags);
         return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
 
@@ -91,6 +98,34 @@ public class PostController {
     @GetMapping("/change")
     public String processSortPost(@RequestParam("sort") String sortBy,Model theModel,RedirectAttributes redirectAttributes){
       return postService.sortPost(sortBy,theModel,redirectAttributes);
+    }
+
+    @GetMapping("/search")
+    public String processSearch(@RequestParam(defaultValue =  "0")int page,@RequestParam("search")String search,Model theModel){
+
+        return "Home";
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
+                                @RequestParam("sortField") String sortField,
+                                @RequestParam("sortDir") String sortDir,
+                                Model model) {
+        int pageSize = 3;
+
+        Page<Post> page = postService.findPaginated(pageNo,pageSize,sortField,sortDir);
+        List<Post> posts = page.getContent();
+        model.addAttribute("currentPage",pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("posts",posts);
+
+        return "Home";
     }
 
 }

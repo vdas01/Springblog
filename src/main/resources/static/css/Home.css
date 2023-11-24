@@ -94,7 +94,7 @@ font-size:1rem;
 margin-bottom:2vh;
 }
 .excerpt{
-              margin-top: 3vh;
+             margin-top: 3vh;
               margin-bottom: 6vh;
               font-size: 1.6rem;
               font-style: italic;
@@ -130,3 +130,15 @@ color:black;
    background-color:black;
   color:white;
 }
+
+.sort_box a{
+    text-decoration: none;
+    color: white;
+}
+.sort_box{
+    display: flex;
+    gap: 2vw;
+    padding: 0.5vw;
+    background-color: black;
+}
+

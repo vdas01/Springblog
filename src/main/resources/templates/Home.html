@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="css/Home.css">
+    <link rel="stylesheet" th:href="@{/css/Home.css}">
 </head>
 <body>
 <div class="container">
@@ -15,10 +15,10 @@
         </div>
         <div class="right">
             <div class="upper">
-                <div class="search_box">
-                    <i class="fa-solid fa-magnifying-glass search_icon"></i>
+                <form th:action="@{'/search' + ${currentPage}}" class="search_box">
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass search_icon"></i></button>
                     <input type="text" name="search" id="search_bar" placeholder="Search...">
-                </div>
+                </form>
                 <div class="user_box">
                     vdas53073@gmail.com
                 </div>
@@ -29,13 +29,17 @@
             <div class="lower">
                 <div class="filter_box">Filter</div>
 
-                <select name="sort"  class="sort_box" onchange="window.location.href='/change?sort=' + this.value;">
-                    <option value="" disabled selected>Sort By</option>
-                    <option value="title">Title</option>
-                    <option value="author">Author</option>
-                    <option value="publishedAtAsc">Published At Ascending</option>
-                    <option value="publishedAtDesc">Published At Descending</option>
-                </select>
+                <div name="sort"  class="sort_box" >
+
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">
+                        Title</a>
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=author&sortDir=' + ${reverseSortDir}}">
+                        Author</a>
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=excerpt&sortDir=' + ${reverseSortDir}}">
+                        Excerpt</a>
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=publishedAt&sortDir=' + ${reverseSortDir}}">
+                        Published At</a>
+                </div>
 
             </div>
         </div>
@@ -56,16 +60,16 @@
         </div>
     </div>
 
-    <div class="pagination">
-        <li th:if="${currentPage != 0}" class="page_item"><a  class="page_link"  th:href="@{/(page=${currentPage - 1})}">Previous</a></li>
+    <div class="pagination" th:if="${totalPages > 1}">
+        <li th:if="${currentPage != 1}" class="page_item"><a  class="page_link"  th:href="@{'/page/' + ${currentPage - 1}
+            + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a></li>
 
-        <li th:classappend="${currentPage == i-1 ? 'active' : ''}" th:each="i : ${#numbers.sequence(1,totalpages,1)}"
-            class="page_item"><a class="page_link" th:href="@{/(page=${i-1})}">
+        <li th:classappend="${currentPage == i ? 'active' : ''}" th:each="i : ${#numbers.sequence(1,totalPages)}"
+            class="page_item"><a class="page_link" th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
             <span th:text="${i}"></span></a></li>
-        <li th:if="${currentPage + 1 != totalpages}" class="page_item">
-            <a href="" class="page_link" th:href="@{/(page=${currentPage + 1})}" >Next</a>
+        <li th:if="${currentPage < totalPages}" class="page_item">
+            <a  class="page_link" th:href="@{'/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" >Next</a>
         </li>
-
     </div>
 
 </div>

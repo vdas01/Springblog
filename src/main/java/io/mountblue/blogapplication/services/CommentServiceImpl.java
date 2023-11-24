@@ -2,7 +2,6 @@ package io.mountblue.blogapplication.services;
 
 import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
-import io.mountblue.blogapplication.entity.Tag;
 import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class CommentServiceImpl implements CommentService{
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
+
 
 
     public CommentServiceImpl(PostRepository postRepository) {
@@ -68,6 +68,7 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.delete(comment);
         return "redirect:/post" + postId;
     }
+
 
 
 }
