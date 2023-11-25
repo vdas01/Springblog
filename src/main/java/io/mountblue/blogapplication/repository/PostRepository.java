@@ -25,21 +25,30 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     @Query("SELECT p FROM Post p " +
             "LEFT JOIN p.tags t ON COALESCE(t.name, '') IN :tagsFilter " +
             "WHERE (:authorFilter IS NULL OR p.author IN :authorFilter) AND " +
-            " (:tagsFilter IS NULL OR t.name IN :tagsFilter) " +
-//            "AND (:publishedDateFilter IS NULL OR p.publishedAt = :publishedDateFilter) " +
+            "(:tagsFilter IS NULL OR t.name IN :tagsFilter) " +
             "ORDER BY " +
-            "CASE WHEN :sortField = 'publishedAt' AND :sortDirection = 'asc' THEN p.publishedAt END ASC, " +
-            "CASE WHEN :sortField = 'publishedAt' AND :sortDirection = 'desc' THEN p.publishedAt END DESC, " +
-            "CASE WHEN :sortField = 'title' AND :sortDirection = 'asc' THEN p.title END ASC, " +
-            "CASE WHEN :sortField = 'title' AND :sortDirection = 'desc' THEN p.title END DESC, " +
-            "CASE WHEN :sortField = 'author' AND :sortDirection = 'asc' THEN p.author END ASC, " +
-            "CASE WHEN :sortField = 'author' AND :sortDirection = 'desc' THEN p.author END DESC, " +
-            "CASE WHEN :sortField = 'excerpt' AND :sortDirection = 'asc' THEN p.excerpt END ASC, " +
-            "CASE WHEN :sortField = 'excerpt' AND :sortDirection = 'asc' THEN p.excerpt END desc, " +
-            "CASE WHEN :sortDirection IS NULL THEN p.title END"
-    )
+            "CASE WHEN :sortField = 'publishedAt' AND :sortDir = 'asc' THEN p.publishedAt END ASC, " +
+            "CASE WHEN :sortField = 'publishedAt' AND :sortDir = 'desc' THEN p.publishedAt END DESC, " +
+            "CASE WHEN :sortField = 'title' AND :sortDir = 'asc' THEN p.title END ASC, " +
+            "CASE WHEN :sortField = 'title' AND :sortDir = 'desc' THEN p.title END DESC, " +
+            "CASE WHEN :sortField = 'author' AND :sortDir = 'asc' THEN p.author END ASC, " +
+            "CASE WHEN :sortField = 'author' AND :sortDir = 'desc' THEN p.author END DESC, " +
+            "CASE WHEN :sortField = 'excerpt' AND :sortDir = 'asc' THEN p.excerpt END ASC, " +
+            "CASE WHEN :sortField = 'excerpt' AND :sortDir = 'desc' THEN p.excerpt END DESC, " +
+            "CASE WHEN :sortDir IS NULL THEN p.title END")
     Page<Post> filterPosts(@Param("authorFilter") String authorFilter, @Param("tagsFilter") List<String> tagFilter,
                            @Param("sortField") String sortField,
-                           @Param("sortDirection") String sortDirection,Pageable pageable);
+                           @Param("sortDir") String sortDir, Pageable pageable);
+
+
+    @Query("SELECT p FROM Post p JOIN PostTag pt ON p.Id = pt.postId JOIN Tag t ON pt.tagId = t.Id " +
+            "WHERE p.title LIKE %:query% OR p.content LIKE %:query% OR p.author LIKE %:query% " +
+            "OR p.excerpt LIKE %:query% OR t.name LIKE %:query%")
+    Page<Post> searchPosts(@Param("query")String query,Pageable pageable);
+
+
+
+
+
 
 }

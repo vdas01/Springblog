@@ -23,15 +23,10 @@ PostController {
         this.postService = postService;
     }
 
-//    @GetMapping("/")
-//    public String home(){
-//
-//    }
-//
 
     @GetMapping("/")
     public String processAllPosts(Model theModel){
-        return  findPaginated(1,"title","asc",null,null,theModel);
+        return  findPaginated(1,"title","asc",null,null,null,theModel);
 
     }
 
@@ -68,30 +63,12 @@ PostController {
         return postService.deletePost(postId);
     }
 
-//    @GetMapping("/getAll")
-//    public ResponseEntity<List<Post>> getAllposts() {
-//        List<Post> posts = postRepository.findAll();
-//        return new ResponseEntity<>(posts, HttpStatus.OK);
-//    }
-
 //    @GetMapping("/editTitle")
 //    public ResponseEntity<Post> editTitle(@RequestParam Integer postId) {
 //
 //        Post fromDB = postRepository.findById(postId).get();
 //
 //        return new ResponseEntity<>(fromDB, HttpStatus.OK);
-//
-//    }
-
-//    @GetMapping("/editForm")
-//    public String editForm(Model model, @RequestParam Integer postId) {
-//
-//        Post fromDB = postRepository.findById(postId).get();
-//
-//        model.addAttribute("toUpdatePost",  fromDB);
-//
-//
-//        return "UpdatePost";
 //
 //    }
 
@@ -109,12 +86,14 @@ PostController {
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
                                 @RequestParam(value = "sortField",required = false) String sortField,
-                                @RequestParam(value = "sortDir",required = false) String sortDir,@RequestParam(name = "author_filter",required = false) String authorFilter,
+                                @RequestParam(value = "sortDir",required = false) String sortDir,
+                                @RequestParam(name = "author_filter",required = false) String authorFilter,
                                 @RequestParam(name = "tag_filter",required = false) String tagFilter,
+                                @RequestParam(name="search",required = false) String search,
                                 Model model) {
         int pageSize = 3;
 
-        return postService.findPaginated(pageNo,pageSize,sortField,sortDir,authorFilter,tagFilter,model);
+        return postService.findPaginated(pageNo,pageSize,sortField,sortDir,authorFilter,tagFilter,search,model);
     }
 
 }

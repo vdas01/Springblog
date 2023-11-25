@@ -45,7 +45,6 @@ public class PostServiceImpl implements  PostService{
 
     @Override
     public String findAllPosts(int page,String sortBy,List<Post>tempPost,Model theModel) {
-            //currpage,perpage
 
         Pageable pageable;
         if(sortBy == null)
@@ -57,14 +56,6 @@ public class PostServiceImpl implements  PostService{
         theModel.addAttribute("currentPage",page);
         theModel.addAttribute("totalpages",posts.getTotalPages());
         theModel.addAttribute("posts",posts);
-
-//        if(tempPost == null) {
-//            List<Post> posts = postRepository.findAll();
-//            theModel.addAttribute("posts",posts);
-//        }
-//        else {
-//            theModel.addAttribute("posts",tempPost);
-//        }
 
             return "Home";
     }
@@ -204,9 +195,10 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public String findPaginated(int pageNo, int pageSize, String sortField, String sortDirection, String authorFilter, String tagFilter, Model model) {
-        System.out.println("Sort  2 :- " + sortField);
+    public String findPaginated(int pageNo, int pageSize, String sortField, String sortDir, String authorFilter, String tagFilter,String search,Model model) {
+        System.out.println("search " + search);
 
+        search = (search == "") ? null : search;
         authorFilter = (authorFilter == "") ? null : authorFilter;
         tagFilter = (tagFilter == "") ? null : tagFilter;
         if(tagFilter!= null && tagFilter.equals("null"))
@@ -214,36 +206,44 @@ public class PostServiceImpl implements  PostService{
         if(authorFilter!= null && authorFilter.equals("null"))
             authorFilter = null;
 
+        if(search != null && search.equals("null"))
+            search = null;
+
         List<String> tagsList = null;
 //        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
 //                    Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1,pageSize);
-//        Page<Post> page =  postRepository.findAll(pageable);
 
         if(tagFilter != null) {
             String[] tagsArray = tagFilter.split(",");
             tagsList = Arrays.asList(tagsArray);
         }
-        Page<Post> page  = postRepository.filterPosts(authorFilter,tagsList,sortField,sortDirection,pageable);
+        Page<Post> page = null;
+        if(search != null){
+            page = postRepository.searchPosts(search,pageable);
+        }
+        else {
+             page = postRepository.filterPosts(authorFilter, tagsList, sortField, sortDir, pageable);
+        }
+
         List<Post> posts = page.getContent();
         model.addAttribute("currentPage",pageNo);
         model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("totalItems",page.getTotalElements());
 
         model.addAttribute("sortField",sortField);
-        model.addAttribute("sortDir",sortDirection);
-        model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
         model.addAttribute("author_filter",authorFilter);
         model.addAttribute("tag_filter",tagFilter);
+
+
 
         model.addAttribute("posts",posts);
 
         return "Home";
     }
-
-
-
 
 
 }
