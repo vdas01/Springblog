@@ -27,17 +27,27 @@
                 </div>
             </div>
             <div class="lower">
-                <div class="filter_box">Filter</div>
+                <form class="filter_box" th:action="@{'/page/' + ${currentPage}}" method="get">
+                    <input type="hidden" name="sortField" th:value="${sortField}">
+                    <input type="hidden" name="sortDir" th:value="${sortDir}">
+                    <input type="text" name="author_filter"  placeholder="Author name..." class="filter_inputs">
+                    <input type="text" name="tag_filter"  placeholder="Tags comma separated" class="filter_inputs">
+                    <button type="submit" class="buttons">Filter</button>
+                </form>
 
                 <div name="sort"  class="sort_box" >
 
-                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}
+                        + '&author_filter=' + ${author_filter}  + '&tag_filter=' + ${tag_filter}}" >
                         Title</a>
-                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=author&sortDir=' + ${reverseSortDir}}">
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=author&sortDir=' + ${reverseSortDir}
+                        + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}" >
                         Author</a>
-                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=excerpt&sortDir=' + ${reverseSortDir}}">
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=excerpt&sortDir=' + ${reverseSortDir}
+                        + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}" >
                         Excerpt</a>
-                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=publishedAt&sortDir=' + ${reverseSortDir}}">
+                    <a th:href="@{'/page/' + ${currentPage} + '?sortField=publishedAt&sortDir=' + ${reverseSortDir}
+                        + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}" >
                         Published At</a>
                 </div>
 
@@ -61,14 +71,16 @@
     </div>
 
     <div class="pagination" th:if="${totalPages > 1}">
-        <li th:if="${currentPage != 1}" class="page_item"><a  class="page_link"  th:href="@{'/page/' + ${currentPage - 1}
-            + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a></li>
+        <li th:if="${currentPage != 1}" class="page_item"><a  class="page_link"  th:href="@{'/page/' + ${currentPage + 1}
+            + '?sortField=' + ${sortField} '&sortDir=' + ${sortDir} + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}" >Previous</a></li>
 
         <li th:classappend="${currentPage == i ? 'active' : ''}" th:each="i : ${#numbers.sequence(1,totalPages)}"
-            class="page_item"><a class="page_link" th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">
+            class="page_item"><a class="page_link" th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField}
+            + '&sortDir=' + ${sortDir} + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}" >
             <span th:text="${i}"></span></a></li>
         <li th:if="${currentPage < totalPages}" class="page_item">
-            <a  class="page_link" th:href="@{'/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" >Next</a>
+            <a  class="page_link" th:href="@{'/page/' + ${currentPage + 1} + '?sortField='
+             + ${sortField} '&sortDir=' + ${sortDir} + '&author_filter=' + ${author_filter} + '&tag_filter=' + ${tag_filter}}"  >Next</a>
         </li>
     </div>
 

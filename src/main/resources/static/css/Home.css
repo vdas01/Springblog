@@ -36,9 +36,7 @@
     gap: 1rem;
   
 }
-.filter_box,.sort_box{
-    width:8vw;
-}
+
 .search_box{
     position: relative;
 
@@ -140,5 +138,8 @@ color:black;
     gap: 2vw;
     padding: 0.5vw;
     background-color: black;
+}
+.filter_inputs{
+margin-right:0.8vw;
 }
 

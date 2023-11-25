@@ -31,7 +31,7 @@ PostController {
 
     @GetMapping("/")
     public String processAllPosts(Model theModel){
-        return  findPaginated(1,"title","asc",theModel);
+        return  findPaginated(1,"title","asc",null,null,theModel);
 
     }
 
@@ -108,24 +108,13 @@ PostController {
 
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
-                                @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDir,
+                                @RequestParam(value = "sortField",required = false) String sortField,
+                                @RequestParam(value = "sortDir",required = false) String sortDir,@RequestParam(name = "author_filter",required = false) String authorFilter,
+                                @RequestParam(name = "tag_filter",required = false) String tagFilter,
                                 Model model) {
         int pageSize = 3;
 
-        Page<Post> page = postService.findPaginated(pageNo,pageSize,sortField,sortDir);
-        List<Post> posts = page.getContent();
-        model.addAttribute("currentPage",pageNo);
-        model.addAttribute("totalPages",page.getTotalPages());
-        model.addAttribute("totalItems",page.getTotalElements());
-
-        model.addAttribute("sortField",sortField);
-        model.addAttribute("sortDir",sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-
-        model.addAttribute("posts",posts);
-
-        return "Home";
+        return postService.findPaginated(pageNo,pageSize,sortField,sortDir,authorFilter,tagFilter,model);
     }
 
 }

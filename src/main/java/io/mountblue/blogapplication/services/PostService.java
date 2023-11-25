@@ -27,7 +27,8 @@ public interface PostService {
 
     String sortPost(String sortBy, Model theModel, RedirectAttributes redirectAttributes);
 
-    Page<Post> findPaginated(int pageNo,int pageSize,String sortField,String sortDirection);
+
+    String findPaginated(int pageNo, int pageSize, String sortField, String sortDirection, String authorFilter, String tagFilter, Model model);
 
 //    Page<Post> searchPosts(int page,String search,Model theModel);
 }
