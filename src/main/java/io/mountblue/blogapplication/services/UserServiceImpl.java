@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -40,16 +41,30 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String registerUser(String name, String email, String password) {
-       String hashedPassword = hashPassword(password);
-        User user = new User(name,email,hashedPassword);
-        userRepository.save(user);
-
-        Roles role = new Roles(name,"ROLE_author");
-        rolesRepository.save(role);
+    public String registerUser(String name, String email, String password, Model theModel) {
+        User tempUser = userRepository.findByName(name);
+        User tempUser2 = userRepository.findByEmail(email);
+        String error;
 
 
-        return "redirect:/loginPage";
+        if(tempUser != null || tempUser2 != null){
+            error = tempUser != null ?
+              "Sorry this username already exists"
+                    :  "Sorry this email id already exists";
+
+
+            theModel.addAttribute("duplicateUser",error);
+            return "redirect:/register?error=" + error;
+        }
+
+            String hashedPassword = hashPassword(password);
+            User user = new User(name, email, hashedPassword);
+            userRepository.save(user);
+
+            Roles role = new Roles(name, "ROLE_author");
+            rolesRepository.save(role);
+            return "redirect:/loginPage";
+
     }
 
 

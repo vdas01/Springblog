@@ -11,8 +11,7 @@
     <nav id="navbar">
         <h1> <a href="/" style="text-decoration: none; color: black;">My Blog Application</a></h1>
         <div class="middle">
-            <a th:href="@{/newpost}" class="buttons">Create Post</a>
-            <span sec:authentication="principal.username" class="user_box buttons"></span>
+            <a th:if="${authenticated}" th:href="@{'/newpost?user=' + ${user.name}}" class="buttons">Create Post</a>
         </div>
         <div class="right" >
             <div class="upper">
@@ -24,8 +23,9 @@
                     <button type="submit"><i class="fa-solid fa-magnifying-glass search_icon"></i></button>
                     <input type="text" name="search" id="search_bar" placeholder="Search..." >
                 </form>
-                <div sec:authentication="principal.username" class="user_box buttons">
+                <div th:if="${user != null}" class="buttons user_box">
 
+                    <p th:text="${user.getName()}"></p>
                 </div>
                 <form action="#" th:action="@{/logout}" method="POST">
                     <input type="submit" value="Logout" class="buttons"/>
@@ -71,8 +71,9 @@
                 </span>
             </div>
             <a th:href="@{/post{postId}(postId=${post.id})}" class="buttons">Read More</a>
-            <a th:href="@{/editpost{postId}(postId=${post.id})}" class="buttons">Edit</a>
-            <a th:href="@{/deletepost{postId}(postId=${post.id})}" class="buttons">Delete</a>
+
+            <a th:href="@{/editpost{postId}(postId=${post.id})}" th:if="${user.name == post.author or userRole.equals('[ROLE_admin]')}"  class="buttons">Edit</a>
+            <a th:href="@{/deletepost{postId}(postId=${post.id})}"  th:if="${user.name == post.author or userRole.equals('[ROLE_admin]')}" class="buttons">Delete</a>
         </div>
     </div>
 

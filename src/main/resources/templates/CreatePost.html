@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://wwww.thymeleaf.org">
+<html xmlns:th="http://wwww.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Create Blog</title>
     <link rel="stylesheet" href="css/CreatePost.css">
@@ -17,8 +17,8 @@
                 <i class="fa-solid fa-magnifying-glass search_icon"></i>
                 <input type="text" name="search" id="search_bar" placeholder="Search...">
             </div>
-            <div class="user_box">
-                vdas53073@gmail.com
+            <div class="user_box" sec:authentication="principal.username">
+
             </div>
             <div class="login_box">
                 Login
@@ -44,7 +44,8 @@
     <textarea id="content" name="content" th:field="*{content}" rows="6" required></textarea>
 
     <label for="author">Author:</label>
-    <input type="text" id="author" name="author" th:field="*{author}" required>
+    <input type="text" id="author" name="author" th:value="${username}" disabled  required>
+
 
     <label for="tags">Tags (comma-separated):</label>
     <input type="text" id="tags" name="tags" th:field="${tag.name}" required>

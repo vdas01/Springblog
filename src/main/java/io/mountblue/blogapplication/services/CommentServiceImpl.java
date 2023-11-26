@@ -2,8 +2,10 @@ package io.mountblue.blogapplication.services;
 
 import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
+import io.mountblue.blogapplication.entity.User;
 import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
+import io.mountblue.blogapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -21,7 +23,12 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
+    public CommentServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public CommentServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -33,12 +40,15 @@ public class CommentServiceImpl implements CommentService{
 
     public CommentServiceImpl(){}
 
-    public String addComment(Integer postId,String name){
+    public String addComment(String user,Integer postId,String text){
         Optional<Post> optionalPost = postRepository.findById(postId);
         if(optionalPost.isPresent()){
-            Comment newComment = new Comment("Vishal","vdas@gmail.com",name);
+            User newuser = userRepository.findByName(user);
+
+            Comment newComment = new Comment(newuser.getName(),newuser.getEmail(),text);
             Post post = optionalPost.get();
             newComment.setPost(post);
+            newComment.setUser(newuser);
 
             commentRepository.save(newComment);
         }

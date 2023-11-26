@@ -60,6 +60,14 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     //The mappedBy attribute is used to specify the field in the Comment entity that owns the relationship.
     //In this case, it's the post field in the Comment entity.
     public Post(){

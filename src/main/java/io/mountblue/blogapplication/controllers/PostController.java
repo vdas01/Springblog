@@ -3,6 +3,7 @@ package io.mountblue.blogapplication.controllers;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.entity.User;
 import io.mountblue.blogapplication.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,24 +38,27 @@ PostController {
     };
 
     @GetMapping("/newpost")
-    public String createNewPost(Model model){
-        return  postService.navigateNewPost(model);
+    public String createNewPost(@RequestParam("user") String user,Model model){
+        System.out.println(user);
+        return  postService.navigateNewPost(user,model);
     }
 
     @PostMapping("/createpost")
-    public String processNewPost(@ModelAttribute("post") Post newPost,@ModelAttribute("tag")Tag newTag){
-        return postService.createPost(newPost,newTag);
+    public String processNewPost(@RequestParam("author") String author,@ModelAttribute("post") Post newPost,@ModelAttribute("tag")Tag newTag){
+        System.out.println("Author" + author);
+//        return "hello";
+       return postService.createPost(author,newPost,newTag);
     }
 
     @GetMapping("/editpost{postId}")
-    public String editPost(@PathVariable Integer postId, Model model){
+    public String editPost(@PathVariable Integer postId,
+                           Model model){
         return postService.navigateEditPost(postId,model);
     }
 
     @PostMapping("/updatepost")
     public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")String updatedTags,
                                      @ModelAttribute("id")int postId,Model model){
-        System.out.println(updatedTags);
         return postService.updatePost(updatedPost,updatedTags,postId,model);
     }
 
@@ -63,14 +67,7 @@ PostController {
         return postService.deletePost(postId);
     }
 
-//    @GetMapping("/editTitle")
-//    public ResponseEntity<Post> editTitle(@RequestParam Integer postId) {
-//
-//        Post fromDB = postRepository.findById(postId).get();
-//
-//        return new ResponseEntity<>(fromDB, HttpStatus.OK);
-//
-//    }
+
 
     @GetMapping("/change")
     public String processSortPost(@RequestParam("sort") String sortBy,Model theModel,RedirectAttributes redirectAttributes){

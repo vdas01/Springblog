@@ -16,6 +16,9 @@ public class Roles {
     @Column(name = "role")
     private String role;
 
+    public Roles(){
+
+    }
 
     public Roles(String username, String role) {
         this.username = username;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.List;
 
 public interface CommentService {
-        String addComment(Integer postId, String name);
+        String addComment(String user,Integer postId, String name);
 
         String editComment(long commentId,int  postId, Model model);
 

@@ -3,6 +3,7 @@ package io.mountblue.blogapplication.controllers;
 import io.mountblue.blogapplication.entity.Comment;
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.entity.User;
 import io.mountblue.blogapplication.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,8 +30,9 @@ public class CommentController {
 
     //add comment
     @GetMapping("/createcomment{postId}")
-    public String processAddComment(@PathVariable Integer postId, @ModelAttribute("comment") String newComment){
-        return commentService.addComment(postId,newComment);
+    public String processAddComment(@RequestParam("user") String  user, @PathVariable Integer postId, @ModelAttribute("comment") String newComment){
+        System.out.println(user + "from comment");
+        return commentService.addComment(user,postId,newComment);
     }
 
     @PostMapping("/editComment")

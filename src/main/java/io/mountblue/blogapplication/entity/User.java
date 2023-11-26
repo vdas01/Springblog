@@ -3,6 +3,7 @@ package io.mountblue.blogapplication.entity;
 import jakarta.persistence.*;
 import org.hibernate.engine.internal.Cascade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -94,6 +95,17 @@ public class User {
     }
 
     //add convenience method
+    public void addPosts(Post post){
+        if(posts == null)
+            posts = new ArrayList<>();
+        posts.add(post);
+    }
+
+    public void addComments(Comment comment){
+        if(comments == null)
+            comments = new ArrayList<>();
+        comments.add(comment);
+    }
 
 }
 

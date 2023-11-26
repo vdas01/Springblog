@@ -1,15 +1,18 @@
 package io.mountblue.blogapplication.services;
 
-import io.mountblue.blogapplication.entity.Comment;
-import io.mountblue.blogapplication.entity.Post;
-import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.entity.*;
 import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
+import io.mountblue.blogapplication.repository.RolesRepository;
+import io.mountblue.blogapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,6 +31,20 @@ public class PostServiceImpl implements  PostService{
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
+
+    public PostServiceImpl(RolesRepository rolesRepository) {
+        this.rolesRepository = rolesRepository;
+    }
+
+    public PostServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public PostServiceImpl(TagService tagService) {
         this.tagService = tagService;
@@ -70,6 +87,24 @@ public class PostServiceImpl implements  PostService{
             Comment newComment = new Comment();
             List<Comment> comments = commentRepository.findAll();
 
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = null;
+            String role = null;
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+
+                if (principal instanceof UserDetails) {
+                    UserDetails userDetails = (UserDetails) principal;
+                    String username = userDetails.getUsername();
+                    role = userDetails.getAuthorities().toString();
+
+                    user = userRepository.findByName(username);
+                }
+            }
+
+            model.addAttribute("userRole",role);
+            model.addAttribute("user",user);
             model.addAttribute("post", post);
             model.addAttribute("tags",tags);
             model.addAttribute("newComment",newComment);
@@ -78,18 +113,24 @@ public class PostServiceImpl implements  PostService{
         return "Post";
     }
 
+
+
     @Override
-    public String navigateNewPost(Model model){
+    public String navigateNewPost(String user,Model model){
         Post newPost = new Post();
         Tag newTag = new Tag();
 
+
+
+        model.addAttribute("username",user);
         model.addAttribute("post",newPost);
         model.addAttribute("tag",newTag);
 
         return "CreatePost";
     }
 
-    public String createPost(Post newPost, Tag newTag){
+    public String createPost(String author,Post newPost, Tag newTag){
+        newPost.setAuthor(author);
         Map<String,Tag> tempTags = new HashMap<>();
         List<Tag> allTags = tagService.findAllTags();
 
@@ -110,6 +151,8 @@ public class PostServiceImpl implements  PostService{
            }
         }
 
+        User user = userRepository.findByName(author);
+        newPost.setUser(user);
         postRepository.save(newPost);
         return "redirect:/";
     }
@@ -200,49 +243,70 @@ public class PostServiceImpl implements  PostService{
         search = (search == "") ? null : search;
         authorFilter = (authorFilter == "") ? null : authorFilter;
         tagFilter = (tagFilter == "") ? null : tagFilter;
-        if(tagFilter!= null && tagFilter.equals("null"))
+        if (tagFilter != null && tagFilter.equals("null"))
             tagFilter = null;
-        if(authorFilter!= null && authorFilter.equals("null"))
+        if (authorFilter != null && authorFilter.equals("null"))
             authorFilter = null;
 
-        if(search != null && search.equals("null"))
+        if (search != null && search.equals("null"))
             search = null;
 
         List<String> tagsList = null;
 //        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
 //                    Sort.by(sortField).descending();
-        Pageable pageable = PageRequest.of(pageNo - 1,pageSize);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
-        if(tagFilter != null) {
+        if (tagFilter != null) {
             String[] tagsArray = tagFilter.split(",");
             tagsList = Arrays.asList(tagsArray);
         }
         Page<Post> page = null;
-        if(search != null){
-            page = postRepository.searchPosts(search,pageable);
+        if (search != null) {
+            page = postRepository.searchPosts(search, pageable);
+        } else {
+            page = postRepository.filterPosts(authorFilter, tagsList, sortField, sortDir, pageable);
         }
-        else {
-             page = postRepository.filterPosts(authorFilter, tagsList, sortField, sortDir, pageable);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        String role = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                String username = userDetails.getUsername();
+                 role = userDetails.getAuthorities().toString();
+
+                System.out.println("Role:- " + role);
+
+                 user = userRepository.findByName(username);
+
+
+            }
         }
 
-        List<Post> posts = page.getContent();
-        model.addAttribute("currentPage",pageNo);
-        model.addAttribute("totalPages",page.getTotalPages());
-        model.addAttribute("totalItems",page.getTotalElements());
+            List<Post> posts = page.getContent();
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("totalPages", page.getTotalPages());
+            model.addAttribute("totalItems", page.getTotalElements());
 
-        model.addAttribute("sortField",sortField);
-        model.addAttribute("sortDir",sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("sortDir", sortDir);
+            model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
-        model.addAttribute("author_filter",authorFilter);
-        model.addAttribute("tag_filter",tagFilter);
+            model.addAttribute("author_filter", authorFilter);
+            model.addAttribute("tag_filter", tagFilter);
+
+            model.addAttribute("user",user);
+            model.addAttribute("userRole",role);
 
 
+            model.addAttribute("posts", posts);
 
-        model.addAttribute("posts",posts);
-
-        return "Home";
-    }
+            return "Home";
+        }
 
 
 }

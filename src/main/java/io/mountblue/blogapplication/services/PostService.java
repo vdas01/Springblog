@@ -2,6 +2,7 @@ package io.mountblue.blogapplication.services;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.entity.Tag;
+import io.mountblue.blogapplication.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
@@ -15,9 +16,9 @@ public interface PostService {
 
     String getPostById(int postId, Model model);
 
-    String navigateNewPost(Model model);
+    String navigateNewPost(String user, Model model);
 
-    String createPost(Post newPost, Tag newTag);
+    String createPost(String author,Post newPost, Tag newTag);
 
     String navigateEditPost(int postId,Model model);
 

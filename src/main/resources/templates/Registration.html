@@ -46,10 +46,16 @@
         button:hover {
             background-color: #45a049;
         }
+        .error{
+        color:red;
+        }
     </style>
 </head>
 <body>
 <form id="registrationForm" th:action="@{/registerUser}" method="post">
+    <h2>Registration Form</h2>
+    <h4 th:if="${duplicateUser ne null}" th:text="${duplicateUser}" class="error"></h4>
+
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
 

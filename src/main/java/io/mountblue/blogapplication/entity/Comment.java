@@ -43,6 +43,7 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+
     public Comment(){
 
     }
@@ -51,6 +52,14 @@ public class Comment {
         this.name = name;
         this.email = email;
         this.comment = comment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Integer getId() {
