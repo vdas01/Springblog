@@ -6,13 +6,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 @Entity
 @Table(name = "comment" )
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -27,16 +28,20 @@ public class Comment {
 
     @Column(name = "createdAt",updatable = false)
     @CreationTimestamp
-    private String createdAt;
+    private Date createdAt;
 
 
     @Column(name = "updatedAt")
     @UpdateTimestamp
-    private String updatedAt;
+    private Date updatedAt;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Comment(){
 
@@ -80,19 +85,19 @@ public class Comment {
         this.comment = comment;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

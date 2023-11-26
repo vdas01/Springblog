@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://wwww.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: white;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: rgb(155, 155, 155);
+            color:black;
+            border: 1px solid black;
+            padding: 20px;
+            border-radius: 8px;
+            min-width:30vw;
+            min-height:40vh;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .login-container input[type="submit"] {
+            background-color: #1a1818;
+            color: #c2bebe;
+            cursor: pointer;
+            width:10vw;
+            padding: 12px 4px;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .login-container input[type="submit"]:hover {
+            background-color: #d1cfcf;
+            color: rgb(43, 42, 42);
+        }
+        .failed{
+        color:red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form th:action="@{/authenticateUser}" method="post">
+        <h5 th:if="${param.error}" class="failed">Sorry! You entered invalid username/password.</h5>
+        <h5 th:if="${param.logout}" class="failed">You have been logout</h5>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <h5>Not registered user ? <a th:href="@{/register}">Register</a></h5>
+</div>
+
+</body>
+</html>

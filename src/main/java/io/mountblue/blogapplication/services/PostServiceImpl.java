@@ -196,7 +196,6 @@ public class PostServiceImpl implements  PostService{
 
     @Override
     public String findPaginated(int pageNo, int pageSize, String sortField, String sortDir, String authorFilter, String tagFilter,String search,Model model) {
-        System.out.println("search " + search);
 
         search = (search == "") ? null : search;
         authorFilter = (authorFilter == "") ? null : authorFilter;

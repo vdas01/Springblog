@@ -56,6 +56,10 @@ public class Post {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinColumn(name = "user_id")
+    private User user;
+
     //The mappedBy attribute is used to specify the field in the Comment entity that owns the relationship.
     //In this case, it's the post field in the Comment entity.
     public Post(){

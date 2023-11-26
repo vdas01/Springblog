@@ -77,11 +77,6 @@ PostController {
       return postService.sortPost(sortBy,theModel,redirectAttributes);
     }
 
-    @GetMapping("/search")
-    public String processSearch(@RequestParam(defaultValue =  "0")int page,@RequestParam("search")String search,Model theModel){
-
-        return "Home";
-    }
 
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
