@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -117,20 +119,16 @@ public class PostServiceImpl implements  PostService{
 
 
     @Override
-    public String navigateNewPost(String user,Model model){
+    public void navigateNewPost(String user,Model model){
         Post newPost = new Post();
         Tag newTag = new Tag();
-
-
 
         model.addAttribute("username",user);
         model.addAttribute("post",newPost);
         model.addAttribute("tag",newTag);
-
-        return "CreatePost";
     }
 
-    public String createPost(String author,Post newPost, Tag newTag){
+    public void createPost(String author,Post newPost, Tag newTag){
         newPost.setAuthor(author);
         Map<String,Tag> tempTags = new HashMap<>();
         List<Tag> allTags = tagService.findAllTags();
@@ -155,11 +153,10 @@ public class PostServiceImpl implements  PostService{
         User user = userRepository.findByName(author);
         newPost.setUser(user);
         postRepository.save(newPost);
-        return "redirect:/";
     }
 
     @Override
-    public String navigateEditPost(int postId,Model model){
+    public void navigateEditPost(int postId,Model model){
         Optional<Post> retrievedPostById = postRepository.findById(postId);
         if (retrievedPostById.isPresent()){
             Post oldPost = retrievedPostById.get();
@@ -177,14 +174,11 @@ public class PostServiceImpl implements  PostService{
             model.addAttribute("tags",tags);
             model.addAttribute("post",oldPost);
         }
-        else{
-            //error;
-        }
-        return "UpdatePost";
+
     }
 
     @Override
-    public String updatePost(String author, Post updatedPost, String updatedTags, int postId, Model model){
+    public void updatePost(String author, Post updatedPost, String updatedTags, int postId, Model model){
 
         Map<String,Tag> tempTags = new HashMap<>();
         List<Tag> allTags = tagService.findAllTags();
@@ -209,21 +203,17 @@ public class PostServiceImpl implements  PostService{
             updatedPost.setAuthor(author);
             postRepository.save(updatedPost);
 
-        return "redirect:/";
     }
 
     @Override
-    public String deletePost(int postId) {
+    public void deletePost(int postId) {
         if (postRepository.existsById(postId)) {
             postRepository.deleteById(postId);
-        } else {
-            // Handle the case where the post with the given ID is not found
         }
-        return "redirect:/";
     }
 
     @Override
-    public String sortPost(String sortBy,Model theModel, RedirectAttributes redirectAttributes) {
+    public void sortPost(String sortBy,Model theModel, RedirectAttributes redirectAttributes) {
         List<Post> tempPost;
 
         if(sortBy.equals("title")){
@@ -237,11 +227,10 @@ public class PostServiceImpl implements  PostService{
         }
 
         redirectAttributes.addAttribute("tempPost", tempPost);
-        return "redirect:/";
     }
 
     @Override
-    public String findPaginated(int pageNo, int pageSize, String sortField, String sortDir, String authorFilter, String tagFilter,String search,Model model) {
+    public void findPaginated(int pageNo, int pageSize, String sortField, String sortDir, String authorFilter, String tagFilter,String search,Model model) {
 
         search = (search == "") ? null : search;
         authorFilter = (authorFilter == "") ? null : authorFilter;
@@ -305,7 +294,6 @@ public class PostServiceImpl implements  PostService{
 
             model.addAttribute("posts", posts);
 
-            return "Home";
         }
 
         @Override
@@ -313,5 +301,92 @@ public class PostServiceImpl implements  PostService{
          return postRepository.findAll();
         }
 
+        @Override
+        public Post findPostByIdRest(int postId){
+             Post post = null;
+            Optional<Post> retrievedPostById = postRepository.findById(postId);
+            if(retrievedPostById.isPresent()){
+                post = retrievedPostById.get();
+            }
+
+            return post;
+        }
+
+        @Override
+        public String createPostRest(Post post){
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                String username = authentication.getName();
+                User currUser = userRepository.findByName(username);
+
+                post.setId(0);
+                post.setUser(currUser);
+                post.setAuthor(username);
+
+                postRepository.save(post);
+                return "created";
+
+            } else {
+                return "Unauthorized";
+            }
+
+        }
+
+        @Override
+        public String deletePostRest(int postId){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (authentication != null && authentication.isAuthenticated()) {
+                String role = authentication.getAuthorities().toString();
+                String username = authentication.getName();
+
+                Optional<Post> retirevedPost = postRepository.findById(postId);
+                if(retirevedPost.isPresent()) {
+                    Post deletePost = retirevedPost.get();
+
+                    String author = deletePost.getAuthor();
+
+                    if (author.equals(username) || role.equals("[ROLE_admin]")) {
+                        postRepository.deleteById(postId);
+                        return "deleted";
+                    } else {
+                       return "Unauthorized";
+                    }
+
+                } else {
+                    return "Post not found";
+                }
+            } else {
+                return "Unauthenticated";
+            }
+
+        }
+
+    @Override
+    public String updatePostRest(int postId, Post updatedPost) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String role = authentication.getAuthorities().toString();
+            String username = authentication.getName();
+            Optional<Post> retrivedPostById = postRepository.findById(postId);
+            if (retrivedPostById.isPresent()) {
+                Post oldPost = retrivedPostById.get();
+                updatedPost.setId(postId);
+
+                String author =  oldPost.getAuthor();
+                if (author.equals(username) || role.equals("[ROLE_admin]")){
+                    postRepository.save(updatedPost);
+                    return "Edited";
+                } else{
+                    return "Forbidden";
+                }
+            } else {
+                return "Post not found";
+            }
+        } else{
+            return "Unauthorized";
+        }
+    }
 
 }

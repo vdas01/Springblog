@@ -6,7 +6,10 @@ import io.mountblue.blogapplication.entity.User;
 import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
 import io.mountblue.blogapplication.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,6 +80,119 @@ public class CommentServiceImpl implements CommentService{
         return "redirect:/post" + postId;
     }
 
+    @Override
+    public List<Comment> getAllCommentsRest() {
+            return commentRepository.findAll();
+    }
+
+    @Override
+    public Comment getCommentByIdRest(int commentId) {
+        Comment comment = null;
+        Optional<Comment> retirvedCommentById = commentRepository.findById(commentId);
+
+        if(retirvedCommentById.isPresent()){
+            comment = retirvedCommentById.get();
+        }
+
+        return  comment;
+    }
+
+    @Override
+    public List<Comment> getCommentsByPostIdRest(int postId) {
+        List<Comment> comments = null;
+        Optional<Post> retirvedPostById = postRepository.findById(postId);
+
+        if(retirvedPostById.isPresent()){
+            Post post = retirvedPostById.get();
+            comments = post.getComments();
+        }
+        return comments;
+    }
+
+    @Override
+    @Transactional
+    public String createCommentRest(int postId,Comment comment) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+
+            Optional<Post> retrivedPostById = postRepository.findById(postId);
+            if(retrivedPostById.isPresent()){
+                User newuser = userRepository.findByName(username);
+                comment.setUser(newuser);
+                comment.setEmail(newuser.getEmail());
+
+                Post post = retrivedPostById.get();
+                comment.setPost(post);
+
+                commentRepository.save(comment);
+
+                return "created";
+            } else{
+                return "Post not found";
+            }
+        } else {
+            return "Unauthorized";
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public String editCommentRest(int commentId, Comment comment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String role = authentication.getAuthorities().toString();
+            String username = authentication.getName();
+            Optional<Comment> retrivedCommentById = commentRepository.findById(commentId);
+            if (retrivedCommentById.isPresent()) {
+                Comment oldComment = retrivedCommentById.get();
+                oldComment.setComment(comment.getComment());
+
+                String author = comment.getName();
+                if (author.equals(username) || role.equals("[ROLE_admin]")){
+                    commentRepository.save(oldComment);
+                    return "Edited";
+                } else{
+                    return "Forbidden";
+                }
+            } else {
+                return "Comment not found";
+            }
+        } else{
+            return "Unauthorized";
+        }
+    }
+
+    @Override
+    public String deleteCommentRest(int commentId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String role = authentication.getAuthorities().toString();
+            String username = authentication.getName();
+
+            Optional<Comment> retirevedComment = commentRepository.findById(commentId);
+            if(retirevedComment.isPresent()) {
+                Comment deleteComment = retirevedComment.get();
+
+                String author = deleteComment.getName();
+
+                if (author.equals(username) || role.equals("[ROLE_admin]")) {
+                    postRepository.deleteById(commentId);
+                    return "deleted";
+                } else {
+                    return "Unauthorized";
+                }
+
+            } else {
+                return "Comment not found";
+            }
+        } else {
+            return "Unauthenticated";
+        }
+    }
 
 
 }

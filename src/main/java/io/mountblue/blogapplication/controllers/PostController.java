@@ -39,40 +39,42 @@ PostController {
 
     @GetMapping("/newpost")
     public String createNewPost(@RequestParam("user") String user,Model model){
-        return  postService.navigateNewPost(user,model);
+          postService.navigateNewPost(user,model);
+        return "CreatePost";
     }
 
     @PostMapping("/createpost")
     public String processNewPost(@RequestParam("author") String author,@ModelAttribute("post") Post newPost,@ModelAttribute("tag")Tag newTag){
-        System.out.println("Author" + author);
-//        return "hello";
-       return postService.createPost(author,newPost,newTag);
+        postService.createPost(author,newPost,newTag);
+        return "redirect:/";
     }
 
     @GetMapping("/editpost{postId}")
     public String editPost(@PathVariable Integer postId,
                            Model model){
-        return postService.navigateEditPost(postId,model);
+         postService.navigateEditPost(postId,model);
+        return "UpdatePost";
     }
 
     @PostMapping("/updatepost")
     public String processUpdatedPost(@RequestParam("author") String author,@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")String updatedTags,
                                      @ModelAttribute("id")int postId,Model model){
-        System.out.println("update");
-        System.out.println(author);
-        return postService.updatePost(author,updatedPost,updatedTags,postId,model);
+         postService.updatePost(author,updatedPost,updatedTags,postId,model);
+        return "redirect:/";
     }
 
     @GetMapping("/deletepost{postId}")
     public String processDeletePost(@PathVariable int postId){
-        return postService.deletePost(postId);
+         postService.deletePost(postId);
+        return "redirect:/";
     }
 
 
 
     @GetMapping("/change")
     public String processSortPost(@RequestParam("sort") String sortBy,Model theModel,RedirectAttributes redirectAttributes){
-      return postService.sortPost(sortBy,theModel,redirectAttributes);
+       postService.sortPost(sortBy,theModel,redirectAttributes);
+        return "redirect:/";
     }
 
 
@@ -86,7 +88,8 @@ PostController {
                                 Model model) {
         int pageSize = 3;
 
-        return postService.findPaginated(pageNo,pageSize,sortField,sortDir,authorFilter,tagFilter,search,model);
+         postService.findPaginated(pageNo,pageSize,sortField,sortDir,authorFilter,tagFilter,search,model);
+        return "Home";
     }
 
 }

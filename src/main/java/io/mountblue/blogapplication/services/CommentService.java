@@ -17,4 +17,16 @@ public interface CommentService {
         String updateComment(String editedComment, Integer commentId, int  postId, SessionStatus sessionStatus);
 
         String deleteComment(Integer commentId,Integer postId);
+
+        List<Comment> getAllCommentsRest();
+
+        Comment getCommentByIdRest(int commentId);
+
+        List<Comment> getCommentsByPostIdRest(int postId);
+
+        String createCommentRest(int postId,Comment comment);
+
+        String editCommentRest(int commentId,Comment comment);
+
+        String deleteCommentRest(int commentId);
 }
