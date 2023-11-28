@@ -45,11 +45,11 @@ public class PostRestController {
 
     @PostMapping("/posts")
     public ResponseEntity<String> createPost(@RequestBody Post post) {
-            String mssg = postService.createPostRest(post);
-            if(mssg.equals("created")){
+            String message = postService.createPostRest(post);
+            if(message.equals("created")){
                 return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
             }
-            else if(mssg.equals("Unauthorized")){
+            else if(message.equals("Unauthorized")){
                 return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<>("Null",HttpStatus.NOT_IMPLEMENTED);

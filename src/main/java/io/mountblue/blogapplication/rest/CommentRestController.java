@@ -95,7 +95,7 @@ public class CommentRestController {
         } else if(message.equals("Unauthorized")){
             return new ResponseEntity<>("Unauthorized", HttpStatus.FORBIDDEN);
         } else if(message.equals("Comment not found")){
-            return new ResponseEntity<>("Comment not found", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
         } else{
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
