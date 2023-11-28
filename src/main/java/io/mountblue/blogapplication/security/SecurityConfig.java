@@ -4,6 +4,7 @@ package io.mountblue.blogapplication.security;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -62,6 +63,10 @@ public class SecurityConfig {
                .exceptionHandling(configurer ->
                        configurer.accessDeniedPage("/access-denied")
                );
+
+       http.httpBasic(Customizer.withDefaults());
+
+       http.csrf(csrf -> csrf.disable());
 
        return http.build();
    }

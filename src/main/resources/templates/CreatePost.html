@@ -20,9 +20,9 @@
             <div class="user_box" sec:authentication="principal.username">
 
             </div>
-            <div class="login_box">
-                Login
-            </div>
+            <form action="#" th:action="@{/logout}" method="POST">
+                <input type="submit" value="Logout" class="buttons"/>
+            </form>
         </div>
         <div class="lower">
             <div class="filter_box">Filter</div>
@@ -49,6 +49,9 @@
 
     <label for="tags">Tags (comma-separated):</label>
     <input type="text" id="tags" name="tags" th:field="${tag.name}" required>
+
+    <input type="hidden"  name="author" th:value="${username}" required>
+
 
     <button type="submit">Create Post</button>
 </form>

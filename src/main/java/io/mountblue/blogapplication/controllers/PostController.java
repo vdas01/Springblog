@@ -39,7 +39,6 @@ PostController {
 
     @GetMapping("/newpost")
     public String createNewPost(@RequestParam("user") String user,Model model){
-        System.out.println(user);
         return  postService.navigateNewPost(user,model);
     }
 
@@ -57,9 +56,11 @@ PostController {
     }
 
     @PostMapping("/updatepost")
-    public String processUpdatedPost(@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")String updatedTags,
+    public String processUpdatedPost(@RequestParam("author") String author,@ModelAttribute("post")Post updatedPost,@ModelAttribute("tags")String updatedTags,
                                      @ModelAttribute("id")int postId,Model model){
-        return postService.updatePost(updatedPost,updatedTags,postId,model);
+        System.out.println("update");
+        System.out.println(author);
+        return postService.updatePost(author,updatedPost,updatedTags,postId,model);
     }
 
     @GetMapping("/deletepost{postId}")

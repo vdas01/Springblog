@@ -52,9 +52,7 @@ public class CommentServiceImpl implements CommentService{
 
             commentRepository.save(newComment);
         }
-        else{
-            //error
-        }
+
         return "redirect:/post"+postId;
     }
 

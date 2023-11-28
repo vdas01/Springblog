@@ -31,7 +31,6 @@ public class CommentController {
     //add comment
     @GetMapping("/createcomment{postId}")
     public String processAddComment(@RequestParam("user") String  user, @PathVariable Integer postId, @ModelAttribute("comment") String newComment){
-        System.out.println(user + "from comment");
         return commentService.addComment(user,postId,newComment);
     }
 

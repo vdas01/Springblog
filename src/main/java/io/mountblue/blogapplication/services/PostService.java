@@ -22,7 +22,7 @@ public interface PostService {
 
     String navigateEditPost(int postId,Model model);
 
-    String updatePost(Post updatedPost,String updatedTag,int postId,Model model);
+    String updatePost(String author,Post updatedPost,String updatedTag,int postId,Model model);
 
     String deletePost(int postId);
 
@@ -30,6 +30,8 @@ public interface PostService {
 
 
     String findPaginated(int pageNo, int pageSize, String sortField, String sortDirection, String authorFilter, String tagFilter, String search,Model model);
+
+    List<Post> findAllPostsRest();
 
 //    Page<Post> searchPosts(int page,String search,Model theModel);
 }

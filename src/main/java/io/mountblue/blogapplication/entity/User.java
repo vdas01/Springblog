@@ -1,5 +1,6 @@
 package io.mountblue.blogapplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.engine.internal.Cascade;
 
@@ -30,6 +31,7 @@ public class User {
 
     //one to many :- post
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     private List<Post> posts;
 
     //one to many:- comment

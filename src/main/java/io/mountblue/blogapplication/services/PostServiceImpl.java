@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -102,7 +103,7 @@ public class PostServiceImpl implements  PostService{
                     user = userRepository.findByName(username);
                 }
             }
-
+            System.out.println(role + " by comment id");
             model.addAttribute("userRole",role);
             model.addAttribute("user",user);
             model.addAttribute("post", post);
@@ -164,12 +165,14 @@ public class PostServiceImpl implements  PostService{
             Post oldPost = retrievedPostById.get();
             List<Tag> oldTagsList = oldPost.getTags();
             StringBuilder tags = new StringBuilder();
+            String author = oldPost.getAuthor();
 
            for(Tag tempTag : oldTagsList){
                tags.append(tempTag.getName()).append(",");
            }
             tags.deleteCharAt(tags.length() - 1);
 
+           model.addAttribute("author",author);
            model.addAttribute("postId",postId);
             model.addAttribute("tags",tags);
             model.addAttribute("post",oldPost);
@@ -181,7 +184,7 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public String updatePost(Post updatedPost,String updatedTags,int postId,Model model){
+    public String updatePost(String author, Post updatedPost, String updatedTags, int postId, Model model){
 
         Map<String,Tag> tempTags = new HashMap<>();
         List<Tag> allTags = tagService.findAllTags();
@@ -203,7 +206,7 @@ public class PostServiceImpl implements  PostService{
                 updatedPost.addTags(tag);
             }
         }
-
+            updatedPost.setAuthor(author);
             postRepository.save(updatedPost);
 
         return "redirect:/";
@@ -273,13 +276,10 @@ public class PostServiceImpl implements  PostService{
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
 
-
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
                  role = userDetails.getAuthorities().toString();
-
-                System.out.println("Role:- " + role);
 
                  user = userRepository.findByName(username);
 
@@ -306,6 +306,11 @@ public class PostServiceImpl implements  PostService{
             model.addAttribute("posts", posts);
 
             return "Home";
+        }
+
+        @Override
+        public List<Post> findAllPostsRest(){
+         return postRepository.findAll();
         }
 
 
