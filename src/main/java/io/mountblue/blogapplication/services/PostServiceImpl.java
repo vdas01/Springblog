@@ -5,6 +5,7 @@ import io.mountblue.blogapplication.repository.CommentRepository;
 import io.mountblue.blogapplication.repository.PostRepository;
 import io.mountblue.blogapplication.repository.RolesRepository;
 import io.mountblue.blogapplication.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -298,6 +299,7 @@ public class PostServiceImpl implements  PostService{
 
         @Override
         public List<Post> findAllPostsRest(){
+
          return postRepository.findAll();
         }
 

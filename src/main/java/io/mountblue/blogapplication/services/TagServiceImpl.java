@@ -20,12 +20,7 @@ public class TagServiceImpl implements  TagService{
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private PostTag postTagRepository;
 
-    public TagServiceImpl(PostTag postTagRepository) {
-        this.postTagRepository = postTagRepository;
-    }
 
     public TagServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -93,10 +88,12 @@ public class TagServiceImpl implements  TagService{
             String username = authentication.getName();
             Optional<Tag> retrivedTagById = tagRepository.findById(tagId);
             if (retrivedTagById.isPresent()) {
+                Tag oldTag = retrivedTagById.get();
+                oldTag.setName(updatedTag.getName());
                 updatedTag.setId(tagId);
 
                 if (role.equals("[ROLE_admin]")){
-                    tagRepository.save(updatedTag);
+                    tagRepository.save(oldTag);
                     return "Updated";
                 } else{
                     return "Forbidden";
@@ -115,14 +112,13 @@ public class TagServiceImpl implements  TagService{
 
         if (authentication != null && authentication.isAuthenticated()) {
             String role = authentication.getAuthorities().toString();
-            String username = authentication.getName();
 
             Optional<Tag> retirevedTagById = tagRepository.findById(tagId);
             if(retirevedTagById.isPresent()) {
                 Tag deleteTag = retirevedTagById.get();
 
                 if (role.equals("[ROLE_admin]")) {
-                    postRepository.deleteById(tagId);
+                    tagRepository.deleteById(tagId);
                     return "deleted";
                 } else {
                     return "Unauthorized";

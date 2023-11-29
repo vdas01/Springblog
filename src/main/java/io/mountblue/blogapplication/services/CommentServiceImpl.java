@@ -120,6 +120,7 @@ public class CommentServiceImpl implements CommentService{
             Optional<Post> retrivedPostById = postRepository.findById(postId);
             if(retrivedPostById.isPresent()){
                 User newuser = userRepository.findByName(username);
+                comment.setName(username);
                 comment.setUser(newuser);
                 comment.setEmail(newuser.getEmail());
 
@@ -150,7 +151,7 @@ public class CommentServiceImpl implements CommentService{
                 Comment oldComment = retrivedCommentById.get();
                 oldComment.setComment(comment.getComment());
 
-                String author = comment.getName();
+                String author = oldComment.getName();
                 if (author.equals(username) || role.equals("[ROLE_admin]")){
                     commentRepository.save(oldComment);
                     return "Edited";
@@ -180,7 +181,7 @@ public class CommentServiceImpl implements CommentService{
                 String author = deleteComment.getName();
 
                 if (author.equals(username) || role.equals("[ROLE_admin]")) {
-                    postRepository.deleteById(commentId);
+                    commentRepository.delete(deleteComment);
                     return "deleted";
                 } else {
                     return "Unauthorized";

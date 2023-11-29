@@ -45,7 +45,7 @@ public class CommentRestController {
         }
     }
 
-    @GetMapping("/comments/{postId}")
+    @GetMapping("/comments/postId/{postId}")
     public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable int postId){
         List<Comment> comments = commentService.getCommentsByPostIdRest(postId);
 

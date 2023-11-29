@@ -48,7 +48,7 @@ public class TagRestController {
         }
     }
 
-    @GetMapping("/tags/{postId}")
+    @GetMapping("/tags/postId/{postId}")
     public ResponseEntity<List<Tag>> getTagsByPostId(@PathVariable int postId){
         List<Tag> tags = tagService.getTagsByPostIdRest(postId);
 
@@ -61,7 +61,7 @@ public class TagRestController {
         }
     }
 
-    @PostMapping("/tags/{postId}")
+    @PostMapping("/tags/postId/{postId}")
     public ResponseEntity<String> createTag(@PathVariable int postId,@RequestBody Tag tag){
         String message = tagService.createTagRest(postId,tag);
         if(message.equals("created")){
@@ -104,5 +104,5 @@ public class TagRestController {
         }
     }
 
-    
+
 }

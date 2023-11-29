@@ -69,6 +69,7 @@ public class Post {
         this.user = user;
     }
 
+
     //The mappedBy attribute is used to specify the field in the Comment entity that owns the relationship.
     //In this case, it's the post field in the Comment entity.
     public Post(){
@@ -82,6 +83,8 @@ public class Post {
         this.author = author;
         this.isPublished = isPublished;
     }
+
+
 
     public List<Comment> getComments() {
         return comments;
@@ -163,7 +166,9 @@ public class Post {
         this.updatedAt = updatedAt;
     }
 
-
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     //add convience method to add tags
     public void addTags(Tag theTag){

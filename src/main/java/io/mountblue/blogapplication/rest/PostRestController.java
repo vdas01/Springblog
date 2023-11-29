@@ -2,6 +2,8 @@ package io.mountblue.blogapplication.rest;
 
 import io.mountblue.blogapplication.entity.Post;
 import io.mountblue.blogapplication.services.PostService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,10 @@ public class PostRestController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getAllPostsRest(){
+    public ResponseEntity<List<Post>> getAllPostsRest(HttpServletRequest request){
         List<Post> posts = postService.findAllPostsRest();
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("username"));
         if(posts.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
